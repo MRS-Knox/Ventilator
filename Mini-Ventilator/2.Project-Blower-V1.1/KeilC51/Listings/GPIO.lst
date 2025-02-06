@@ -1,0 +1,69 @@
+C51 COMPILER V9.00   GPIO                                                                  01/15/2025 09:25:09 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE GPIO
+OBJECT MODULE PLACED IN .\Debug\GPIO.obj
+COMPILER INVOKED BY: E:\KEIL\KEIL4\C51\BIN\C51.EXE ..\User\source\Hardware\GPIO.c LARGE OMF2 BROWSE INCDIR(..\FU68xx_Har
+                    -dware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\GPIO.lst) OBJECT(.\Debug\GPIO.obj)
+
+line level    source
+
+   1          /* --------------------------- (C) COPYRIGHT 2021 Fortiortech ShenZhen -----------------------------
+   2              File Name      : GPIO.c
+   3              Author         : Lewis.wang
+   4              Version        : V1.0
+   5              Date           : 2021-12-04
+   6              Description    : This file contains GPIO function used for Motor Control.
+   7          ----------------------------------------------------------------------------------------------------  
+   8                                                 All Rights Reserved
+   9          ------------------------------------------------------------------------------------------------- */
+  10          #include <FU68xx_4_MCU.h>
+  11          #include <Myproject.h>
+  12          /* -------------------------------------------------------------------------------------------------
+  13              Function Name  : GPIO_DefaultInit
+  14              Description    : 没用的IO口配置上拉，提高芯片抗干扰能力
+  15              Date           : 2021-12-04
+  16              Parameter      : None
+  17          ------------------------------------------------------------------------------------------------- */
+  18          void GPIO_DefaultInit(void)
+  19          {
+  20   1          P3_OE = 0;
+  21   1          P3_PU = P33 | P34 ; // 需确认这些端口能接受上拉   
+  22   1      }
+  23          /* -------------------------------------------------------------------------------------------------
+  24              Function Name  : GPIO_Init
+  25              Description    : 相关GPIO口初始化配置
+  26              Date           : 2021-12-04
+  27              Parameter      : None
+  28          ------------------------------------------------------------------------------------------------- */
+  29          void GPIO_Init(void)
+  30          {  
+  31   1        SetBit(P0_OE , P00);                       //FG开漏输出
+  32   1      //  SetBit(P1_AN , ODE0);       
+  33   1        SetBit(P0_PU , P00);                       //FG内部上拉
+  34   1        GP00 = 0;     
+  35   1       
+  36   1        ClrBit(P0_OE , P01);                       //PWM输入
+  37   1        ClrBit(P0_PU , P01);
+  38   1          
+  39   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.00   GPIO                                                                  01/15/2025 09:25:09 PAGE 2   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

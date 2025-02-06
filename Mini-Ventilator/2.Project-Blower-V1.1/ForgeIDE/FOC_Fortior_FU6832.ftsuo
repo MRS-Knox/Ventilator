@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-2"?>
+<UserOptions>
+	<OpenState>
+		<OpenFiles>
+			Path="..\\User\\include\\Customer.h"
+			State="14,523,523"
+		</OpenFiles>
+		<OpenFolders>
+			<{19EC0F27-9937-453a-B5C7-A133F21AC6AC}>
+				Expanded="TRUE"
+				Name="Application"
+				Name="Function"
+				Name="HardWare"
+				Name="FU68XX_Hardware_Driver"
+				Name="Include"
+			</{19EC0F27-9937-453a-B5C7-A133F21AC6AC}>
+		</OpenFolders>
+	</OpenState>
+	<Breakpoints>
+	</Breakpoints>
+	<UI_dockbar_disassembler>
+		AddressList=""
+	</UI_dockbar_disassembler>
+	<UI_dockbar_memory1>
+		ViewAddress="$pc"
+		AddressList=""
+	</UI_dockbar_memory1>
+	<UI_dockbar_memory2>
+		ViewAddress="$pc"
+		AddressList=""
+	</UI_dockbar_memory2>
+	<UI_dockbar_memory3>
+		ViewAddress="$pc"
+		AddressList=""
+	</UI_dockbar_memory3>
+	<UI_dockbar_memory4>
+		ViewAddress="$pc"
+		AddressList=""
+	</UI_dockbar_memory4>
+	<UI_dockbar_registers>
+		ActiveRegGroup="General Register"
+	</UI_dockbar_registers>
+</UserOptions>

@@ -1,0 +1,147 @@
+C51 COMPILER V9.00   PLLINITANDSTATESWITCH                                                 01/15/2025 09:25:08 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE PLLINITANDSTATESWITCH
+OBJECT MODULE PLACED IN .\Debug\PLLInitandStateSwitch.obj
+COMPILER INVOKED BY: E:\KEIL\KEIL4\C51\BIN\C51.EXE ..\User\source\Function\PLLInitandStateSwitch.c LARGE OMF2 BROWSE INC
+                    -DIR(..\FU68xx_Hardware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\PLLInitandStateSwitch.lst) OBJECT(.\Debug\
+                    -PLLInitandStateSwitch.obj)
+
+line level    source
+
+   1          /* --------------------------- (C) COPYRIGHT 2022 Fortiortech ShenZhen -----------------------------
+   2              File Name      : PLLInitandStateSwitch.c
+   3              Author         : Fortiortech  Appliction Team
+   4              Version        : V1.0
+   5              Date           : 2022-7-23
+   6              Description    : This file contains PLLInitandStateSwitch.c function used for Motor Startup.
+   7          ----------------------------------------------------------------------------------------------------
+   8                                                 All Rights Reserved
+   9          ------------------------------------------------------------------------------------------------- */
+  10          #include "FU68xx_4.h"
+  11          #include <Myproject.h>
+  12          /*  -------------------------------------------------------------------------------------------------
+  13              Function Name  : PLLFunctionInit
+  14              Description    : PLL参数初始化
+  15              Date           : 2022-07-23
+  16              Parameter      : None
+  17              ------------------------------------------------------------------------------------------------- */
+  18          void PLLFunctionInit(void)
+  19          {
+  20   1          memset(&PLLfunction, 0, sizeof(PLLVar));
+  21   1          PI_Init_PLL();
+  22   1          PLLfunction.Theta_pre = 0;
+  23   1          FOC__THETA = 0;
+  24   1          FOC_EFREQACC  = 0;
+  25   1          FOC_EFREQMIN  = 0;
+  26   1          FOC_EFREQHOLD = 0;
+  27   1          ClrBit(FOC_CR1, EFAE);
+  28   1          ClrBit(FOC_CR1, RFAE);
+  29   1          ClrBit(FOC_CR1, ANGM);
+  30   1          PLLfunction.BEMFBase = V_factor1;
+  31   1          PLLfunction.Vfactor = V_factor;
+  32   1          PLLfunction.PLLFunctionFlag = 1; 
+  33   1      }
+  34          
+  35          /*  -------------------------------------------------------------------------------------------------
+  36              Function Name  : StartupState
+  37              Description    : 启动状态机控制
+  38              Date           : 2022-07-23
+  39              Parameter      : None
+  40              ------------------------------------------------------------------------------------------------- */
+  41          
+  42          void PLLStateFunction(void)
+  43          {
+  44   1          switch (PLLfunction.PLLFunctionFlag)
+  45   1          {
+  46   2              case 1:
+  47   2                  PLLfunction.test = PLLfunction.Theta_pre + 80;
+  48   2                  if (PLLfunction.count < 30000)
+  49   2                  {
+  50   3                      PLLfunction.count++;                
+  51   3                  }
+  52   2                  
+  53   2                  PLLSoftwareFunction();
+C51 COMPILER V9.00   PLLINITANDSTATESWITCH                                                 01/15/2025 09:25:08 PAGE 2   
+
+  54   2      
+  55   2                  if ((PLLfunction.count > 1500) && (PLLfunction.Speed_PLL1 > CLOSE_SPEED))
+  56   2                  {
+  57   3                      PLLfunction.Switch_Count++;
+  58   3                      
+  59   3                      if  (PLLfunction.Switch_Count > 500)
+  60   3                      {
+  61   4                          PLLfunction.count = 0;
+  62   4                          PLLfunction.PLLFunctionFlag = 2;
+  63   4                          PLLfunction.Theta_err = FOC__THETA - FOC__ETHETA;
+  64   4                          FOC_DQKP = DQKP_observer;
+  65   4                          FOC_DQKI = DQKI_observer;
+  66   4                          ClrBit(DRV_SR , DCIP);
+  67   4                          SetBit(FOC_CR1, ANGM);
+  68   4                      }           
+  69   3                  }
+  70   2                  else
+  71   2                  {
+  72   3                      if (PLLfunction.Switch_Count > 0)
+  73   3                      {
+  74   4                          PLLfunction.Switch_Count--;
+  75   4                      }
+  76   3                  }
+  77   2                  break;
+  78   2              case 2:
+  79   2                  if (PLLfunction.count < 256)
+  80   2                  {
+  81   3                      PLLfunction.count++;
+  82   3                      FOC__THETA = FOC__ETHETA + ((PLLfunction.Theta_err >> 8)*(256  - PLLfunction.count));     
+             -         
+  83   3                  }
+  84   2                  else
+  85   2                  {
+  86   3                      PLLfunction.PLLFunctionFlag = 3;
+  87   3                  }            
+  88   2                  break;
+  89   2              default:
+  90   2                  break;
+  91   2          }   
+  92   1      }
+  93          
+  94          /*  -------------------------------------------------------------------------------------------------
+  95              Function Name  : RampFucntion
+  96              Description    : PLL启动时参数爬坡函数
+  97              Date           : 2022-07-23
+  98              Parameter      : None
+  99              ------------------------------------------------------------------------------------------------- */
+ 100          
+ 101          void RampFucntion(void)
+ 102          {    
+ 103   1          if (PLLfunction.BEMFBase_Update_Count > 0)
+ 104   1          {
+ 105   2              if (PLLfunction.BEMFBase < V_factor1_Max)
+ 106   2              {
+ 107   3                  PLLfunction.BEMFBase = PLLfunction.BEMFBase + 50;
+ 108   3              }
+ 109   2              PLLfunction.BEMFBase_Update_Count = 0;
+ 110   2          }
+ 111   1          
+ 112   1          PLLfunction.BEMFBase_Update_Count++;
+ 113   1      }
+
+C51 COMPILER V9.00   PLLINITANDSTATESWITCH                                                 01/15/2025 09:25:08 PAGE 3   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    364    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

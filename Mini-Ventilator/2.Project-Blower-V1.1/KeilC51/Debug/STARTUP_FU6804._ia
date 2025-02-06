@@ -1,0 +1,1 @@
+"..\FU68xx_Hardware_Driver\Source\STARTUP_FU6804.A51" INCDIR(..\FU68xx_Hardware_Driver\Include;..\User\include) SET (LARGE) DEBUG PRINT(.\Listings\STARTUP_FU6804.lst) OBJECT(.\Debug\STARTUP_FU6804.obj) EP

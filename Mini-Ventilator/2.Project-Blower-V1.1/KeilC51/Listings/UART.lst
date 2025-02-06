@@ -1,0 +1,227 @@
+C51 COMPILER V9.00   UART                                                                  01/15/2025 09:25:09 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\Debug\UART.obj
+COMPILER INVOKED BY: E:\KEIL\KEIL4\C51\BIN\C51.EXE ..\User\source\Hardware\UART.c LARGE OMF2 BROWSE INCDIR(..\FU68xx_Har
+                    -dware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\UART.lst) OBJECT(.\Debug\UART.obj)
+
+line level    source
+
+   1          /********************************************************************************
+   2          
+   3           **** Copyright (C), 2019, Fortior Technology Co., Ltd.                      ****
+   4          
+   5           ********************************************************************************
+   6              File Name     : UART.c
+   7              Author        : Bruce HW&RD
+   8              Date          : 2019-09-11
+   9              Description   : .C file function description
+  10              Version       : 1.0
+  11              Function List :
+  12          
+  13              Record        :
+  14              1.Date        : 2019-09-11
+  15               Author      : Bruce HW&RD
+  16               Modification: Created file
+  17          
+  18          ********************************************************************************/
+  19          
+  20          #include "AddFunction.h"
+  21          #include "FU68xx_4_MCU.h"
+  22          #include "UART.h"
+  23          
+  24          void UART2_Init(void)
+  25          {
+  26   1          SetBit(PH_SEL, UART2EN);    //P0[1]as UART2_RXD; P0[0]as UART2_TXD
+  27   1      
+  28   1              ClrBit(P0_OE, P01);         //输入使能
+  29   1          SetBit(P0_PU, P01);         //上拉电阻
+  30   1          SetBit(P0_OE, P00);         //输出使能
+  31   1          SetBit(P0_PU, P00);         //上拉电阻
+  32   1              
+  33   1          ClrBit(UT2_CR, UT2MOD1);    //00-->单线制8bit        01-->8bit uart(波特率可设置)
+  34   1          SetBit(UT2_CR, UT2MOD0);    //10-->单线制9bit        11-->9bit uart(波特率可设置)
+  35   1              
+  36   1          ClrBit(UT2_CR, UT2SM2);     //0-->单机通讯              1-->多机通讯；
+  37   1              
+  38   1          SetBit(UT2_CR, UT2REN);     //0-->不允许串行输入     1-->允许串行输入，软件清0;
+  39   1              
+  40   1          ClrBit(UT2_CR, UT2TB8);     //模式2/3下数据发送第9位，在多机通信中，可用于判断�
+             -�前数据帧的数据是地址还是数据，TB8=0为数据，TB8=1为地址
+  41   1          ClrBit(UT2_CR, UT2RB8);     //模式2/3下数据接收第9位，若SM2=0,作为停止位
+  42   1              
+  43   1          ClrBit(UT2_BAUD, BAUD2_SEL); //倍频使能0-->Disable  1-->Enable
+  44   1              
+  45   1          SetBit(UT2_BAUD, UART2CH);   //UART2端口功能转移使能1    0：P36->RXD P37->TXD 1:P01->RXD P00-
+             ->TXD
+  46   1              
+  47   1          SetBit(UT2_BAUD, UART2IEN);  //UART2中断使能0-->Disable  1-->Enable
+  48   1              
+  49   1          UT2_BAUD = 0x600C;           //波特率可设置 = 24000000/(16/(1+ UT_BAUD[BAUD_SEL]))/(UT_BAUD+1)  
+             -  0x009B-->9600 0x000c-->115200 0x0005-->256000
+  50   1              
+  51   1              PSPI_UT20 = 1;
+C51 COMPILER V9.00   UART                                                                  01/15/2025 09:25:09 PAGE 2   
+
+  52   1              PSPI_UT21 = 1;                           //UART2中断优先级为3     
+  53   1      }
+  54          
+  55          unsigned char Send_CRC8(unsigned char dat[],unsigned char length)
+  56          {
+  57   1              unsigned char crc = 0xFF;
+  58   1              unsigned char count = 0;
+  59   1              unsigned char crc_count = 0;
+  60   1              for(count = 0;count < length;count++)
+  61   1              {
+  62   2                      crc ^= dat[count];
+  63   2                      for(crc_count = 0;crc_count < 8;crc_count++)    //模二除法
+  64   2                      { 
+  65   3                              if(crc & 0x80)
+  66   3                              { 
+  67   4                                      crc <<= 1;
+  68   4                                      crc ^= 0x31;
+  69   4                              }
+  70   3                              else
+  71   3                              {
+  72   4                                      crc <<= 1;
+  73   4                              }       
+  74   3                      }
+  75   2              }
+  76   1              return (crc^0x00);
+  77   1      }
+  78          
+  79          unsigned char Check_CRC8(unsigned char dat[],unsigned char length)
+  80          {
+  81   1              unsigned char crc = 0xFF;
+  82   1              unsigned char count = 0;
+  83   1              unsigned char crc_count = 0;
+  84   1              for(count = 0;count < length;count++)
+  85   1              {
+  86   2                      crc ^= dat[count];
+  87   2                      for(crc_count = 0;crc_count < 8;crc_count++)    //模二除法
+  88   2                      { 
+  89   3                              if(crc & 0x80)
+  90   3                              { 
+  91   4                                      crc <<= 1;
+  92   4                                      crc ^= 0x31;
+  93   4                              }
+  94   3                              else
+  95   3                              {
+  96   4                                      crc <<= 1;
+  97   4                              }       
+  98   3                      }
+  99   2              }
+ 100   1              return (crc^0x00);
+ 101   1      }
+ 102          
+ 103          
+ 104          unsigned char Motor_Return(void){
+ 105   1              static unsigned char flag_poweron = 0;
+ 106   1              static unsigned char flag_error = 0;
+ 107   1              static unsigned char error_200mstick = 0;
+ 108   1              /* 刚通电返回 0x0011 */
+ 109   1              if(0x0001 == blower_state_t.rec_command)
+ 110   1              {
+ 111   2                      Usart2_SendValue(DATATYPE_COMMAND,POWER_ON);
+ 112   2                      blower_state_t.rec_command = 0x0;
+ 113   2                      flag_poweron = 1;
+C51 COMPILER V9.00   UART                                                                  01/15/2025 09:25:09 PAGE 3   
+
+ 114   2                      return 1;
+ 115   2              }
+ 116   1              if(flag_poweron == 0)
+ 117   1                      return 0;
+ 118   1              /* 发送实际转速 */
+ 119   1              Usart2_SendValue(DATATYPE_DATA,blower_state_t.actual_speed);
+ 120   1              /* 电机有故障,两秒后故障还没消除,则上报主芯片 */
+ 121   1          if(mcFaultSource != FaultNoSource && flag_error == 0)       
+ 122   1              {
+ 123   2                      error_200mstick++;
+ 124   2                      if(error_200mstick >= 20)
+ 125   2                      {       
+ 126   3                              flag_error = 1;
+ 127   3                              Usart2_SendValue(DATATYPE_COMMAND,BLOWER_ERROR);        //电机报错
+ 128   3                      }
+ 129   2              }
+ 130   1              return 0;
+ 131   1      }
+ 132          
+ 133          void UART2_ReciveData(void)
+ 134          {
+ 135   1              unsigned char agroup_data[7]    = {0};
+ 136   1              unsigned char agroup_count              = 0;
+ 137   1              unsigned char flag_headertrue   = 0;
+ 138   1              //uart2_data_t.rec_outcount point to frame header.
+ 139   1              while(uart2_data_t.uart2_recdata[uart2_data_t.rec_outcount] != 0x09){
+ 140   2                      if(uart2_data_t.rec_outcount == uart2_data_t.rec_incount)
+ 141   2                              return;
+ 142   2                      uart2_data_t.rec_outcount++;
+ 143   2                      if(uart2_data_t.rec_outcount >= UART_MAX) 
+ 144   2                              uart2_data_t.rec_outcount = 0;
+ 145   2              }
+ 146   1              //No data.
+ 147   1              if(uart2_data_t.rec_outcount == uart2_data_t.rec_incount)
+ 148   1                      return;
+ 149   1              //Copy uart2_data_t.uart2_recdata to agroup_data.
+ 150   1              for(agroup_count = 0;agroup_count < 7;agroup_count++)   
+ 151   1              {
+ 152   2                      agroup_data[agroup_count] = uart2_data_t.uart2_recdata[uart2_data_t.rec_outcount++];
+ 153   2                      if(uart2_data_t.rec_outcount >= UART_MAX)
+ 154   2                              uart2_data_t.rec_outcount = 0;
+ 155   2              }
+ 156   1              //Judge CRC and frame end.
+ 157   1              if((Check_CRC8(agroup_data,4) == agroup_data[4]) && (agroup_data[5] == 0x01) && (agroup_data[6] == 0x23))
+ 158   1              {
+ 159   2                      if(agroup_data[1] == DATATYPE_DATA)     //Data
+ 160   2                      {
+ 161   3                              blower_state_t.set_speed = (agroup_data[2] << 8) | agroup_data[3];
+ 162   3                      }
+ 163   2                      else if(agroup_data[1] == DATATYPE_COMMAND) //Command
+ 164   2                      {
+ 165   3                              blower_state_t.rec_command = (agroup_data[2] << 8) | agroup_data[3];
+ 166   3                      }
+ 167   2              }
+ 168   1      }
+ 169          
+ 170          void Usart2_SendValue(uint8 data_type,uint16 send_command)
+ 171          {
+ 172   1              unsigned char send_databuff[7];
+ 173   1              unsigned char i;
+ 174   1              send_databuff[0] = 0x09;                //Frame begin.
+ 175   1              send_databuff[1] = data_type;   //Send data type. 
+C51 COMPILER V9.00   UART                                                                  01/15/2025 09:25:09 PAGE 4   
+
+ 176   1              send_databuff[2] = (send_command >> 8); 
+ 177   1              send_databuff[3] = send_command;
+ 178   1              send_databuff[4] = Send_CRC8(send_databuff,4);  
+ 179   1              send_databuff[5] = 0x01;        //Frame end.    
+ 180   1              send_databuff[6] = 0x23;                
+ 181   1              for(i = 0;i < 7;i++){
+ 182   2                      uart2_data_t.uart2_senddata[uart2_data_t.send_incount++] = send_databuff[i];
+ 183   2                      if(uart2_data_t.send_incount >= UART_MAX)
+ 184   2                              uart2_data_t.send_incount = 0;
+ 185   2              }
+ 186   1              //Triggle transmisson interrupt.
+ 187   1              UT2_DR = uart2_data_t.uart2_senddata[uart2_data_t.send_outcount++];
+ 188   1              if(uart2_data_t.send_outcount >= UART_MAX)
+ 189   1                      uart2_data_t.send_outcount = 0;
+ 190   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    741    ----
+   CONSTANT SIZE    =      7    ----
+   XDATA SIZE       =      3      25
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

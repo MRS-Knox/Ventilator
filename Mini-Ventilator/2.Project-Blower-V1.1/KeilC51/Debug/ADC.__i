@@ -1,0 +1,1 @@
+"..\User\source\Hardware\ADC.c" LARGE OMF2 BROWSE INCDIR(..\FU68xx_Hardware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\ADC.lst) OBJECT(.\Debug\ADC.obj)

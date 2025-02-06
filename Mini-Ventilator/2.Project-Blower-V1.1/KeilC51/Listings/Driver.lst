@@ -1,0 +1,82 @@
+C51 COMPILER V9.00   DRIVER                                                                01/15/2025 09:25:08 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE DRIVER
+OBJECT MODULE PLACED IN .\Debug\Driver.obj
+COMPILER INVOKED BY: E:\KEIL\KEIL4\C51\BIN\C51.EXE ..\User\source\Hardware\Driver.c LARGE OMF2 BROWSE INCDIR(..\FU68xx_H
+                    -ardware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\Driver.lst) OBJECT(.\Debug\Driver.obj)
+
+line level    source
+
+   1          /* --------------------------- (C) COPYRIGHT 2021 Fortiortech ShenZhen -----------------------------
+   2              File Name      : DRIVER.c
+   3              Author         : Lewis.wang
+   4              Version        : V1.0
+   5              Date           : 2021-12-04
+   6              Description    : This file contains Driver function used for Motor Control.
+   7          ----------------------------------------------------------------------------------------------------  
+   8                                                 All Rights Reserved
+   9          ------------------------------------------------------------------------------------------------- */
+  10          #include <Myproject.h>
+  11          /* -------------------------------------------------------------------------------------------------
+  12              Function Name  : Driver_Init
+  13              Description    : 驱动初始化
+  14              Date           : 2021-12-04
+  15              Parameter      : None
+  16          ------------------------------------------------------------------------------------------------- */
+  17          void Driver_Init(void)
+  18          {
+  19   1          DRV_ARR = PWM_VALUE_LOAD - 1;                             // 载波频率的周期值
+  20   1          DRV_DTR = PWM_LOAD_DEADTIME - 1;                          // 死区时间
+  21   1          DRV_DR  = 0;
+  22   1      
+  23   1          DRV_CMR = 0x00;                                        
+  24   1          DRV_OUT = 0x00;   
+  25   1      
+  26   1          ClrBit(DRV_SR , FGIE);                                    //FG中断使能 0-->Disable 1-->Enable
+  27   1      
+  28   1          ClrBit(DRV_SR , DCIF);                                    //清除DRV中断标志位
+  29   1      
+  30   1          SetBit(DRV_SR , DCIM1);                                   //DRV比较匹配中断模式
+  31   1          ClrBit(DRV_SR , DCIM0);
+  32   1      
+  33   1          DRV_COMR = (PWM_VALUE_LOAD >> 3);                         //设置DRV计数器的比较匹配值
+  34   1      
+  35   1          PDRV1 = 1;                                                // 中断优先级设置为2，优先级低�
+             -��FO硬件过流
+  36   1          PDRV0 = 0;
+  37   1      
+  38   1          SetBit(DRV_SR , DCIP);                                        //0-->1个计数周期产生中断  1-->2个�
+             -��数周期产生中断
+  39   1      
+  40   1          ClrBit(DRV_CR , FOCEN);
+  41   1       
+  42   1          SetBit(DRV_CR , MESEL);                                   //MESEL为0，ME模块工作在BLDC模式  M
+             -ESEL为1，ME模块工作在FOC/SVPWM/SPWM模式
+  43   1      
+  44   1          SetBit(DRV_CR , DRVEN);                                       //计数器使能  0-->Disable        1-->Enable
+  45   1          ClrBit(DRV_CR , DRPE);                                        //计数器比较值预装载使能 0-->Disab
+             -le                        1-->Enable
+  46   1          SetBit(DRV_CR , DRVOE);                                       //Driver输出使能0-->Disable               1-->Enable
+  47   1          MOE=0;
+  48   1      }
+
+
+C51 COMPILER V9.00   DRIVER                                                                01/15/2025 09:25:08 PAGE 2   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     92    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

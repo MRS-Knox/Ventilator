@@ -1,0 +1,1 @@
+"..\User\source\Hardware\UART.c" LARGE OMF2 BROWSE INCDIR(..\FU68xx_Hardware_Driver\Include;..\User\include) DEBUG PRINT(.\Listings\UART.lst) OBJECT(.\Debug\UART.obj)
