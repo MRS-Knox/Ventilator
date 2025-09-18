@@ -27,6 +27,10 @@
 #include "systick.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "queue.h"
+#include "semphr.h"
+#include "event_groups.h"
+#include "FreeRTOS_Define.h"
 /** @addtogroup STM32F4xx_StdPeriph_Examples
   * @{
   */
@@ -47,11 +51,69 @@
 /******************************************************************************/
 
 /**
-  * @brief   This function handles about .
+  * @brief   This function handles about open or close machine.
   * @param   None
   * @retval  None
   */
-void EXTI15_10_IRQHandler(void){
+void EXTI1_IRQHandler(void){
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	
+	if(EXTI_GetITStatus(EXTI_Line1) != RESET){
+		EXTI_ClearITPendingBit(EXTI_Line1);
+		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == RESET && Machine_State.flag_machine_switch == RESET){
+			Machine_State.flag_machine_switch = SET;
+		}
+		else if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == SET && Machine_State.flag_machine_switch == SET){
+			Machine_State.flag_machine_switch = RESET;
+			if(Machine_State.flag_machine_onoff == RESET){
+				Machine_State.flag_machine_onoff = SET;
+                xEventGroupClearBitsFromISR(MachineStateEvent_Handle,Machine_Off_Event);
+				xEventGroupSetBitsFromISR(MachineStateEvent_Handle,Machine_On_Event,&xHigherPriorityTaskWoken);
+			}
+			else if(Machine_State.flag_machine_onoff == SET){
+				Machine_State.flag_machine_onoff = RESET;
+                xEventGroupClearBitsFromISR(MachineStateEvent_Handle,Machine_On_Event);
+				xEventGroupSetBitsFromISR(MachineStateEvent_Handle,Machine_Off_Event,&xHigherPriorityTaskWoken);
+			}
+		}
+	}
+}
+
+/**
+  * @brief   This function handles about open or close bluetooth chip or close alarm voice.
+  * @param   None
+  * @retval  None
+  */
+void EXTI9_5_IRQHandler(void){
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	if(EXTI_GetITStatus(EXTI_Line9) != RESET){
+		EXTI_ClearITPendingBit(EXTI_Line9);
+		if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9) == RESET && Machine_State.flag_bluetooth_switch == RESET){
+			Machine_State.flag_bluetooth_switch = SET;
+		}
+		else if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9) == SET && Machine_State.flag_bluetooth_switch == SET){
+			Machine_State.flag_bluetooth_switch = RESET;
+
+            if(Machine_Time.push_btkey_time_10ms >= 500){   //5s
+                Machine_Time.push_btkey_time_10ms = 0;
+                if(Machine_State.flag_bluetooth_onoff == RESET){
+                    Machine_State.flag_bluetooth_onoff = SET;
+                    xEventGroupSetBitsFromISR(MachineStateEvent_Handle,BlueTooth_On_Event,&xHigherPriorityTaskWoken);
+                }
+                else if(Machine_State.flag_bluetooth_onoff == SET){
+                    Machine_State.flag_bluetooth_onoff = RESET;
+                    xEventGroupSetBitsFromISR(MachineStateEvent_Handle,BlueTooth_Off_Event,&xHigherPriorityTaskWoken);
+                }
+            }
+            else{
+                Machine_Time.push_btkey_time_10ms = 0;
+                // if(Machine_State.flag_alarmvoice_state == SET){
+                //     Machine_State.flag_alarmvoice_state == RESET;
+                //     xEventGroupSetBitsFromISR(MachineStateEvent_Handle,AlarmState_Off_Event,&xHigherPriorityTaskWoken);
+                // }
+            } 
+		}
+	}
 }
 
 /**
@@ -68,25 +130,35 @@ void UART7_IRQHandler(void){
   * @param   None
   * @retval  None
   */
+UARTQueue_t sendqueue;
+FlagStatus flag_send = RESET;
 void USART2_IRQHandler(void){
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	/* Receive interrupt. */
 	if(USART_GetITStatus(USART2,USART_IT_RXNE)){
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
-		Blower_UartQueue.rx_buff[Blower_UartQueue.rx_in_count++] = (uint8_t)USART_ReceiveData(USART2); 
-		/* Judge frame end. */
-		if(((Blower_UartQueue.rx_buff[Blower_UartQueue.rx_in_count-2]<<8)|Blower_UartQueue.rx_buff[Blower_UartQueue.rx_in_count-1]) == BLOWER_FRAMEEND)	
-			Mid_ReciveMotor();	
-		if(Blower_UartQueue.rx_in_count >= UART_MAXBUFF) 
-			Blower_UartQueue.rx_in_count = 0;
+		BlowerReceiveQueue.buff[BlowerReceiveQueue.buff_count++] = (uint8_t)USART_ReceiveData(USART2);
+		if(BlowerReceiveQueue.buff[0] != BLOWER_FRAMEHEADER)
+			BlowerReceiveQueue.buff_count = 0;
+		if(BlowerReceiveQueue.buff_count >= UART_MAXBUFF){
+			BlowerReceiveQueue.buff_count = 0;
+			xQueueSendToFrontFromISR(BlowerRECQueue_Handle,&BlowerReceiveQueue,&xHigherPriorityTaskWoken);
+		}
 	}
 	/* Transmit interrupt. */
 	if(USART_GetITStatus(USART2,USART_IT_TXE)){
-		USART_SendData(USART2,(uint16_t)Blower_UartQueue.tx_buff[Blower_UartQueue.tx_out_count++]);
-		if(Blower_UartQueue.tx_out_count >= UART_MAXBUFF) 
-			Blower_UartQueue.tx_out_count = 0;
-		/* Judge whether the transmission is finish. */
-		if(Blower_UartQueue.tx_out_count == Blower_UartQueue.tx_in_count){ 
-			USART_ITConfig(USART2,USART_IT_TXE,DISABLE);		
+		if(flag_send == RESET){
+			if(pdTRUE == xQueueReceiveFromISR(BlowerSendQueue_Handle,&sendqueue,&xHigherPriorityTaskWoken))
+				flag_send = SET;
+			else	//Transmit data finish.
+				USART_ITConfig(USART2,USART_IT_TXE,DISABLE);
+		}
+		if(flag_send == SET){
+			USART_SendData(USART2,(uint16_t)sendqueue.buff[sendqueue.buff_count++]);	
+			if(sendqueue.buff_count >= UART_MAXBUFF){
+				sendqueue.buff_count = 0;
+				flag_send = RESET;
+			} 
 		}
 	}
 	/* Over run error. */
@@ -96,11 +168,51 @@ void USART2_IRQHandler(void){
 }
 
 /**
-  * @brief   This function handles is Timer6 about .
+  * @brief   This function handles is Timer6 about machine base time.
   * @param   None
   * @retval  None
   */
+#define MAX_COUNT_10MS      30000000
 void TIM6_DAC_IRQHandler(){
+	if(TIM_GetITStatus(TIM6,TIM_IT_Update) != RESET){
+		TIM_ClearITPendingBit(TIM6,TIM_IT_Update);
+        
+		Machine_Time.basetime_10ms = Machine_Time.basetime_10ms>=MAX_COUNT_10MS ? 0 : Machine_Time.basetime_10ms+1;
+        
+        if(Machine_State.flag_machine_onoff == SET)
+		    Machine_Time.machine_runtime_10ms = Machine_Time.machine_runtime_10ms>=MAX_COUNT_10MS ? 0 : Machine_Time.machine_runtime_10ms+1;
+		
+        /* Record the time for the bluetooth key is pushing. */
+        if(Machine_State.flag_bluetooth_switch == SET)
+            Machine_Time.push_btkey_time_10ms = Machine_Time.push_btkey_time_10ms>=2000 ? 2000 : Machine_Time.push_btkey_time_10ms+1;
+        /* ----------------- 1s ------------------- */
+		if(Machine_Time.machine_runtime_10ms % 100 == 0 && Machine_State.flag_machine_onoff == SET){
+            /* Record the running tims of the machine. */
+            if(Machine_Time.machine_runtime_s++ >= 60){
+                Machine_Time.machine_runtime_s = 0;
+                if(Machine_Time.machine_runtime_min++ >= 60){
+                    Machine_Time.machine_runtime_min = 0;
+                    Machine_Time.machine_runtime_hour = Machine_Time.machine_runtime_hour>=SINGLEMACHINERUN_MAXTIME ? 
+                                                        SINGLEMACHINERUN_MAXTIME : Machine_Time.machine_runtime_hour+1;
+                    Machine_Time.machine_totalruntime_hour = Machine_Time.machine_totalruntime_hour>=TOTALMACHINERUN_MAXTIME ? 
+                                                        TOTALMACHINERUN_MAXTIME : Machine_Time.machine_totalruntime_hour+1;
+                }
+            }
+            /* Delay increase pressure function. */
+            if(Machine_State.flag_delaypress == SET){
+                Machine_Time.delaypresstime_1s++;
+                if(Set_Param.delaypress_min == 0)
+                    Run_Param.delayp_remaintime = 0;
+                else if(Set_Param.delaypress_min > 0)
+                    Run_Param.delayp_remaintime = Set_Param.delaypress_min - (Machine_Time.delaypresstime_1s/60);
+                /* ERROR! 80 minutes! */
+                if(Machine_Time.delaypresstime_1s >= 4800){
+                    Machine_Time.delaypresstime_1s = 0;
+                    Machine_State.flag_delaypress = RESET;
+                }
+            }
+        }
+	}	
 }
 
 /**

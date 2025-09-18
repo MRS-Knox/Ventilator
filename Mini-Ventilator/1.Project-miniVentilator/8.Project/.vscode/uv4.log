@@ -1,349 +1,106 @@
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'E:\KEIL\KEIL5\ARM\ARMCC\Bin'
-Build target 'project'
-compiling timers.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\timers.c(326): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xReturn );
-..\10.FreeRTOS\Source\timers.c(425): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( xTimerPeriodInTicks > 0 ) );
-..\10.FreeRTOS\Source\timers.c(461): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(472): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xCommandID < tmrFIRST_FROM_ISR_COMMAND );
-..\10.FreeRTOS\Source\timers.c(512): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(523): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xCommandID >= tmrFIRST_FROM_ISR_COMMAND );
-..\10.FreeRTOS\Source\timers.c(549): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( xTimerTaskHandle != NULL ) );
-..\10.FreeRTOS\Source\timers.c(563): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(578): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(603): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(645): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(691): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(957): warning:  #223-D: function "printf" declared implicitly
-                      configASSERT( pxCallback );
-..\10.FreeRTOS\Source\timers.c(1040): warning:  #223-D: function "printf" declared implicitly
-                          configASSERT( ( pxTimer->xTimerPeriodInTicks > 0 ) );
-..\10.FreeRTOS\Source\timers.c(1169): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(1198): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(1219): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTimer );
-..\10.FreeRTOS\Source\timers.c(1276): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xTimerQueue );
-..\10.FreeRTOS\Source\timers.c: 18 warnings, 2 errors
-compiling heap_4.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(245): warning:  #223-D: function "printf" declared implicitly
-                  heapVALIDATE_BLOCK_POINTER( pxBlock );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(251): warning:  #223-D: function "printf" declared implicitly
-                      heapVALIDATE_BLOCK_POINTER( pxBlock );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(261): warning:  #223-D: function "printf" declared implicitly
-                      heapVALIDATE_BLOCK_POINTER( pvReturn );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(269): warning:  #223-D: function "printf" declared implicitly
-                      configASSERT( heapSUBTRACT_WILL_UNDERFLOW( pxBlock->xBlockSize, xWantedSize ) == 0 );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(278): warning:  #223-D: function "printf" declared implicitly
-                          configASSERT( ( ( ( size_t ) pxNewBlockLink ) & portBYTE_ALIGNMENT_MASK ) == 0 );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(343): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( ( ( size_t ) pvReturn ) & ( size_t ) portBYTE_ALIGNMENT_MASK ) == 0 );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(362): warning:  #223-D: function "printf" declared implicitly
-          heapVALIDATE_BLOCK_POINTER( pxLink );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(363): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( heapBLOCK_IS_ALLOCATED( pxLink ) != 0 );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(364): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxLink->pxNextFreeBlock == NULL );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c(506): warning:  #223-D: function "printf" declared implicitly
-          heapVALIDATE_BLOCK_POINTER( pxIterator );
-..\10.FreeRTOS\Source\portable\MemMang\heap_4.c: 10 warnings, 2 errors
-compiling event_groups.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\event_groups.c(197): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-..\10.FreeRTOS\Source\event_groups.c(198): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( uxBitsToWaitFor != 0 );
-..\10.FreeRTOS\Source\event_groups.c(201): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\event_groups.c(327): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xEventGroup );
-..\10.FreeRTOS\Source\event_groups.c(328): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( uxBitsToWaitFor & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-..\10.FreeRTOS\Source\event_groups.c(329): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( uxBitsToWaitFor != 0 );
-..\10.FreeRTOS\Source\event_groups.c(332): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\event_groups.c(482): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xEventGroup );
-..\10.FreeRTOS\Source\event_groups.c(483): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( uxBitsToClear & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-..\10.FreeRTOS\Source\event_groups.c(559): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xEventGroup );
-..\10.FreeRTOS\Source\event_groups.c(560): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( uxBitsToSet & eventEVENT_BITS_CONTROL_BYTES ) == 0 );
-..\10.FreeRTOS\Source\event_groups.c(651): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxEventBits );
-..\10.FreeRTOS\Source\event_groups.c(663): warning:  #223-D: function "printf" declared implicitly
-                  configASSERT( pxTasksWaitingForBits->xListEnd.pxNext != ( const ListItem_t * ) &( pxTasksWaitingForBits->xListEnd ) );
-..\10.FreeRTOS\Source\event_groups.c: 13 warnings, 2 errors
+Rebuild target 'project'
+compiling Middle_RTC.c...
+compiling Middle_Blower.c...
+compiling Application_MaskDetection.c...
+compiling Middle_Pressure.c...
+compiling Middle_Flow.c...
+compiling Application_Machine_OnOff.c...
+..\1.Application\Application_Machine_OnOff.c(10): warning:  #550-D: variable "measure_flow"  was set but never used
+  	int measure_flow = 0;
+..\1.Application\Application_Machine_OnOff.c: 1 warning, 0 errors
+compiling Middle_PID.c...
+compiling Application_Calibration.c...
+compiling Middle_TestMask.c...
+compiling Application_ControlBlower.c...
+..\1.Application\Application_ControlBlower.c(13): warning:  #177-D: variable "run_param"  was declared but never referenced
+  	Run_Param_t run_param;
+..\1.Application\Application_ControlBlower.c: 1 warning, 0 errors
+compiling Application_ReceiveBlower.c...
+compiling Middle_Alarm.c...
+compiling Middle_ComfortFunction.c...
+compiling Middle_Algorithm.c...
+compiling Application_Main.c...
+compiling Middle_Key.c...
+compiling Middle_Flash.c...
+compiling Middle_Timer.c...
+compiling Middle_WatchDog.c...
+compiling Middle_Voice.c...
+compiling Driver_Key.c...
+compiling Middle_TestPower.c...
+compiling Driver_RTC.c...
+compiling Driver_Timer.c...
+compiling Middle_Parameter.c...
+compiling Middle_RGB.c...
+compiling Driver_Flash.c...
+compiling Driver_Pressure.c...
+compiling Driver_Blower.c...
+compiling Middle_EEPROM.c...
+compiling Driver_Voice.c...
+compiling Driver_SDP31.c...
+compiling Driver_GZP6891D.c...
+compiling Driver_RGB.c...
+compiling Driver_TestPower.c...
+compiling Add_Function.c...
+compiling Use_Struct.c...
+compiling Driver_EEPROM.c...
 compiling list.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\list.c: 0 warnings, 2 errors
-compiling stm32f4xx_it.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\6.Library\src\stm32f4xx_it.c: 0 warnings, 2 errors
-compiling port.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(41): error:  #29: expected an expression
-  #if configMAX_SYSCALL_INTERRUPT_PRIORITY == 0
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(237): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( uxCriticalNesting == ~0UL );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(322): error:  #29: expected an expression
-      configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(322): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( configMAX_SYSCALL_INTERRUPT_PRIORITY );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(327): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( portCPUID != portCORTEX_M7_r0p1_ID );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(328): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( portCPUID != portCORTEX_M7_r0p0_ID );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(353): error:  #29: expected an expression
-          ucMaxSysCallPriority = configMAX_SYSCALL_INTERRUPT_PRIORITY & ucMaxPriorityValue;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(361): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ucMaxSysCallPriority );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(365): error:  #29: expected an expression
-          configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY & ( ~ucMaxPriorityValue ) ) == 0U );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(365): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY & ( ~ucMaxPriorityValue ) ) == 0U );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(395): error:  #29: expected an expression
-              configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY & 0x1U ) == 0U );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(395): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( ( configMAX_SYSCALL_INTERRUPT_PRIORITY & 0x1U ) == 0U );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(443): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( uxCriticalNesting == 1000UL );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(459): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK ) == 0 );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(466): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( uxCriticalNesting );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(813): error:  #20: identifier "SystemCoreClock" is undefined
-          portNVIC_SYSTICK_LOAD_REG = ( configSYSTICK_CLOCK_HZ / configTICK_RATE_HZ ) - 1UL;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(870): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( ucCurrentPriority >= ucMaxSysCallPriority );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c(886): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( portAIRCR_REG & portPRIORITY_GROUP_MASK ) <= ulMaxPRIGROUPValue );
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c: 12 warnings, 8 errors
+compiling FreeRTOS_Define.c...
 compiling croutine.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\croutine.c: 0 warnings, 2 errors
+compiling event_groups.c...
 compiling stream_buffer.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\stream_buffer.c(349): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xBufferSizeBytes > sbBYTES_TO_STORE_MESSAGE_LENGTH );
-..\10.FreeRTOS\Source\stream_buffer.c(355): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xBufferSizeBytes > 0 );
-..\10.FreeRTOS\Source\stream_buffer.c(358): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xTriggerLevelBytes <= xBufferSizeBytes );
-..\10.FreeRTOS\Source\stream_buffer.c(550): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(593): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(650): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(684): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(720): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(743): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pvTxData );
-..\10.FreeRTOS\Source\stream_buffer.c(744): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(759): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xRequiredSpace > xDataLengthBytes );
-..\10.FreeRTOS\Source\stream_buffer.c(807): warning:  #223-D: function "printf" declared implicitly
-                      configASSERT( pxStreamBuffer->xTaskWaitingToSend == NULL );
-..\10.FreeRTOS\Source\stream_buffer.c(876): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pvTxData );
-..\10.FreeRTOS\Source\stream_buffer.c(877): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(936): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( size_t ) xMessageLength == xDataLengthBytes );
-..\10.FreeRTOS\Source\stream_buffer.c(982): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pvRxData );
-..\10.FreeRTOS\Source\stream_buffer.c(983): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1018): warning:  #223-D: function "printf" declared implicitly
-                  configASSERT( pxStreamBuffer->xTaskWaitingToReceive == NULL );
-..\10.FreeRTOS\Source\stream_buffer.c(1088): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1109): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xBytesAvailable == 0 );
-..\10.FreeRTOS\Source\stream_buffer.c(1134): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pvRxData );
-..\10.FreeRTOS\Source\stream_buffer.c(1135): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1247): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1275): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1315): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1351): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1385): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( xCount > ( size_t ) 0 );
-..\10.FreeRTOS\Source\stream_buffer.c(1393): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( xHead + xFirstLength ) <= pxStreamBuffer->xLength );
-..\10.FreeRTOS\Source\stream_buffer.c(1401): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( ( xCount - xFirstLength ) <= pxStreamBuffer->xLength );
-..\10.FreeRTOS\Source\stream_buffer.c(1431): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( xCount != ( size_t ) 0 );
-..\10.FreeRTOS\Source\stream_buffer.c(1440): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( xFirstLength <= xCount );
-..\10.FreeRTOS\Source\stream_buffer.c(1441): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( xTail + xFirstLength ) <= pxStreamBuffer->xLength );
-..\10.FreeRTOS\Source\stream_buffer.c(1506): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( memset( pucBuffer, ( int ) STREAM_BUFFER_BUFFER_WRITE_VALUE, xBufferSizeBytes ) == pucBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1543): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1558): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer );
-..\10.FreeRTOS\Source\stream_buffer.c(1561): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer->xTaskWaitingToReceive == NULL );
-..\10.FreeRTOS\Source\stream_buffer.c(1562): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxStreamBuffer->xTaskWaitingToSend == NULL );
-..\10.FreeRTOS\Source\stream_buffer.c(1565): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( uxNotificationIndex < configTASK_NOTIFICATION_ARRAY_ENTRIES );
-..\10.FreeRTOS\Source\stream_buffer.c: 38 warnings, 2 errors
 compiling queue.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\queue.c(311): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(364): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( xReturn != pdFAIL );
-..\10.FreeRTOS\Source\queue.c(554): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( pxNewQueue );
-..\10.FreeRTOS\Source\queue.c(763): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxMutex );
-..\10.FreeRTOS\Source\queue.c(823): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxMutex );
-..\10.FreeRTOS\Source\queue.c(927): warning:  #223-D: function "printf" declared implicitly
-              configASSERT( xHandle );
-..\10.FreeRTOS\Source\queue.c(950): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(951): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(952): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
-..\10.FreeRTOS\Source\queue.c(955): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\queue.c(1168): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(1169): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(1170): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( xCopyPosition == queueOVERWRITE ) && ( pxQueue->uxLength != 1 ) ) );
-..\10.FreeRTOS\Source\queue.c(1307): warning:  #223-D: function "printf" declared implicitly
-                  prvIncrementQueueTxLock( pxQueue, cTxLock );
-..\10.FreeRTOS\Source\queue.c(1341): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(1345): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue->uxItemSize == 0 );
-..\10.FreeRTOS\Source\queue.c(1350): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX ) && ( pxQueue->u.xSemaphore.xMutexHolder != NULL ) ) );
-..\10.FreeRTOS\Source\queue.c(1477): warning:  #223-D: function "printf" declared implicitly
-                  prvIncrementQueueTxLock( pxQueue, cTxLock );
-..\10.FreeRTOS\Source\queue.c(1507): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( pxQueue ) );
-..\10.FreeRTOS\Source\queue.c(1511): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(1516): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\queue.c(1660): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( pxQueue ) );
-..\10.FreeRTOS\Source\queue.c(1664): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue->uxItemSize == 0 );
-..\10.FreeRTOS\Source\queue.c(1669): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\queue.c(1883): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( ( pxQueue ) );
-..\10.FreeRTOS\Source\queue.c(1887): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( ( pvBuffer ) == NULL ) && ( ( pxQueue )->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(1892): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( !( ( xTaskGetSchedulerState() == taskSCHEDULER_SUSPENDED ) && ( xTicksToWait != 0 ) ) );
-..\10.FreeRTOS\Source\queue.c(2039): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2040): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(2107): warning:  #223-D: function "printf" declared implicitly
-                  prvIncrementQueueRxLock( pxQueue, cRxLock );
-..\10.FreeRTOS\Source\queue.c(2136): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2137): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( UBaseType_t ) 0U ) ) );
-..\10.FreeRTOS\Source\queue.c(2138): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue->uxItemSize != 0 ); /* Can't peek a semaphore. */
-..\10.FreeRTOS\Source\queue.c(2191): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( xQueue );
-..\10.FreeRTOS\Source\queue.c(2212): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2233): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2248): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2630): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(2675): warning:  #223-D: function "printf" declared implicitly
-      configASSERT( pxQueue );
-..\10.FreeRTOS\Source\queue.c(3005): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xQueue );
-..\10.FreeRTOS\Source\queue.c(3055): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xQueue );
-..\10.FreeRTOS\Source\queue.c(3089): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( xQueue );
-..\10.FreeRTOS\Source\queue.c(3308): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxQueueSetContainer ); /* LCOV_EXCL_BR_LINE */
-..\10.FreeRTOS\Source\queue.c(3309): warning:  #223-D: function "printf" declared implicitly
-          configASSERT( pxQueueSetContainer->uxMessagesWaiting < pxQueueSetContainer->uxLength );
-..\10.FreeRTOS\Source\queue.c(3341): warning:  #223-D: function "printf" declared implicitly
-                  prvIncrementQueueTxLock( pxQueueSetContainer, cTxLock );
-..\10.FreeRTOS\Source\queue.c: 45 warnings, 2 errors
 compiling tasks.c...
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(199): error:  #29: expected an expression
-      uint32_t ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h(230): error:  #29: expected an expression
-      uint32_t ulReturn, ulNewBASEPRI = configMAX_SYSCALL_INTERRUPT_PRIORITY;
-..\10.FreeRTOS\Source\tasks.c: 0 warnings, 2 errors
-".\Objects\project.axf" - 26 Error(s), 136 Warning(s).
-Target not created.
-Build Time Elapsed:  00:00:01
+compiling heap_4.c...
+compiling timers.c...
+compiling port.c...
+compiling misc.c...
+compiling stm32f4xx_it.c...
+compiling stm32f4xx_adc.c...
+compiling stm32f4xx_cec.c...
+compiling stm32f4xx_can.c...
+compiling stm32f4xx_crc.c...
+compiling stm32f4xx_cryp_des.c...
+compiling stm32f4xx_cryp.c...
+compiling stm32f4xx_dac.c...
+compiling stm32f4xx_cryp_tdes.c...
+compiling stm32f4xx_cryp_aes.c...
+compiling stm32f4xx_dbgmcu.c...
+compiling stm32f4xx_dcmi.c...
+compiling stm32f4xx_dfsdm.c...
+compiling stm32f4xx_dma.c...
+compiling stm32f4xx_dma2d.c...
+compiling stm32f4xx_dsi.c...
+compiling stm32f4xx_exti.c...
+compiling stm32f4xx_flash_ramfunc.c...
+compiling stm32f4xx_hash.c...
+compiling stm32f4xx_gpio.c...
+compiling stm32f4xx_fmpi2c.c...
+compiling stm32f4xx_hash_sha1.c...
+compiling stm32f4xx_flash.c...
+compiling stm32f4xx_hash_md5.c...
+compiling stm32f4xx_iwdg.c...
+compiling stm32f4xx_i2c.c...
+compiling stm32f4xx_lptim.c...
+compiling stm32f4xx_pwr.c...
+compiling stm32f4xx_ltdc.c...
+compiling stm32f4xx_qspi.c...
+compiling stm32f4xx_rcc.c...
+assembling startup_stm32f446xx.s...
+compiling stm32f4xx_rng.c...
+compiling stm32f4xx_rtc.c...
+compiling stm32f4xx_sai.c...
+compiling stm32f4xx_sdio.c...
+compiling stm32f4xx_wwdg.c...
+compiling stm32f4xx_syscfg.c...
+compiling stm32f4xx_spi.c...
+compiling stm32f4xx_spdifrx.c...
+compiling stm32f4xx_usart.c...
+compiling systick.c...
+compiling stm32f4xx_tim.c...
+compiling system_stm32f4xx.c...
+linking...
+Program Size: Code=24300 RO-data=500 RW-data=276 ZI-data=53452  
+FromELF: creating hex file...
+".\Objects\project.axf" - 0 Error(s), 2 Warning(s).
+Build Time Elapsed:  00:00:09

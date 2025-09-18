@@ -53,7 +53,7 @@
 //配置CPU主频
 #define configCPU_CLOCK_HZ                          SystemCoreClock 
 //配置滴答定时器时钟源主频，只有滴答定时器时钟源主频与CPU主频不同的时候才需要配置，STM32F429无需配置
-// #define configSYSTICK_CLOCK_HZ                   1000000 
+//#define configSYSTICK_CLOCK_HZ                   	1000000 
 //配置滴答中断的频率，1000Hz即1ms中断一次   
 #define configTICK_RATE_HZ                          1000
 //配置最大优先级数，最大优先级级 = configMAX_PRIORITIES-1  
@@ -105,7 +105,7 @@
 //1：RTOS对象可通过RAM(FreeRTOS堆中自动分配)创建；0：则RTOS对象只能通过应用程序编写者提供的RAM创建 
 #define configSUPPORT_DYNAMIC_ALLOCATION            1
 //FreeRTOS堆中可用的RAM总量,此时定义的为50K
-#define configTOTAL_HEAP_SIZE                       ((size_t)(20 * 1024))
+#define configTOTAL_HEAP_SIZE                       ((size_t)(50 * 1024))
 //1：用户手动分配FreeRTOS堆中的RAM；0：系统自动分配
 #define configAPPLICATION_ALLOCATED_HEAP            0
 //1：用户自己编写任务创建时使用的内存申请和释放函数；0：使用RTOS自带的函数

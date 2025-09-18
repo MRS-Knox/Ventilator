@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -388,36 +388,131 @@
               <FileType>1</FileType>
               <FilePath>..\1.Application\Application_Main.c</FilePath>
             </File>
+            <File>
+              <FileName>Application_Machine_OnOff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1.Application\Application_Machine_OnOff.c</FilePath>
+            </File>
+            <File>
+              <FileName>Application_ControlBlower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1.Application\Application_ControlBlower.c</FilePath>
+            </File>
+            <File>
+              <FileName>Application_Calibration.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1.Application\Application_Calibration.c</FilePath>
+            </File>
+            <File>
+              <FileName>Application_MaskDetection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1.Application\Application_MaskDetection.c</FilePath>
+            </File>
+            <File>
+              <FileName>Application_ReceiveBlower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\1.Application\Application_ReceiveBlower.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Middle</GroupName>
           <Files>
             <File>
+              <FileName>Middle_Algorithm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Algorithm.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_ComfortFunction.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_ComfortFunction.c</FilePath>
+            </File>
+            <File>
               <FileName>Middle_Blower.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\2.Middle\Middle_Blower.c</FilePath>
-            </File>
-            <File>
-              <FileName>Middle_ControlBlower.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\2.Middle\Middle_ControlBlower.c</FilePath>
             </File>
             <File>
               <FileName>Middle_Pressure.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\2.Middle\Middle_Pressure.c</FilePath>
             </File>
+            <File>
+              <FileName>Middle_Alarm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Alarm.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_TestMask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_TestMask.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Flow.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Flow.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_RTC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_RTC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Key.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Parameter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Parameter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_Voice.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_Voice.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_EEPROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_EEPROM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_RGB.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_RGB.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_TestPower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_TestPower.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_WatchDog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_WatchDog.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Driver</GroupName>
           <Files>
-            <File>
-              <FileName>Driver_RGB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\3.Driver\Driver_RGB.c</FilePath>
-            </File>
             <File>
               <FileName>Driver_Blower.c</FileName>
               <FileType>1</FileType>
@@ -427,6 +522,56 @@
               <FileName>Driver_Pressure.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\3.Driver\Driver_Pressure.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_RTC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_RTC.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_Flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_Key.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_Voice.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_Voice.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_SDP31.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_SDP31.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_GZP6891D.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_GZP6891D.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_EEPROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_EEPROM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_RGB.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_RGB.c</FilePath>
+            </File>
+            <File>
+              <FileName>Driver_TestPower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\3.Driver\Driver_TestPower.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -457,6 +602,11 @@
               <FileName>FreeRTOS_Define.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\4.Common\FreeRTOS_Define.h</FilePath>
+            </File>
+            <File>
+              <FileName>FreeRTOS_Define.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\4.Common\FreeRTOS_Define.c</FilePath>
             </File>
           </Files>
         </Group>

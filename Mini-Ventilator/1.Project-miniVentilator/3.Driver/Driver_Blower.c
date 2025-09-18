@@ -39,7 +39,7 @@ void Dri_BlowerHardware_Init(void){
 	USART_Init(USART2,&Blower_UART_Init);
 	/* Initialize NVIC. */
 	Blower_NVIC_Init.NVIC_IRQChannel 			= USART2_IRQn;
-	Blower_NVIC_Init.NVIC_IRQChannelPreemptionPriority = 4; 	//RTOS can't shield it.
+	Blower_NVIC_Init.NVIC_IRQChannelPreemptionPriority = 7; 	//RTOS can shield it.
 	Blower_NVIC_Init.NVIC_IRQChannelSubPriority = 0; 			
 	Blower_NVIC_Init.NVIC_IRQChannelCmd 		= ENABLE;
 	NVIC_Init(&Blower_NVIC_Init);
@@ -49,9 +49,9 @@ void Dri_BlowerHardware_Init(void){
 	GPIO_WriteBit(P_R_Group,POWER_Pin,Bit_SET); 
 	/* Reset the blower chip. */
 	GPIO_WriteBit(P_R_Group,RESET_Pin,Bit_RESET);
-	udelay_1ms(2);
+	udelay_100us(20);
 	GPIO_WriteBit(P_R_Group,RESET_Pin,Bit_SET);
-	udelay_1ms(2);
+	udelay_100us(20);
 	/* Enable USART2. */
 	USART_Cmd(USART2,ENABLE); 
 }

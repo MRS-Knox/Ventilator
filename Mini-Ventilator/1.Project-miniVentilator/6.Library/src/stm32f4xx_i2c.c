@@ -450,12 +450,14 @@ void I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Directi
   if (I2C_Direction != I2C_Direction_Transmitter)
   {
     /* Set the address bit0 for read */
+	Address <<= 1; 
     Address |= I2C_OAR1_ADD0;
   }
   else
   {
     /* Reset the address bit0 for write */
-    Address &= (uint8_t)~((uint8_t)I2C_OAR1_ADD0);
+	Address <<= 1; 
+//    Address &= (uint8_t)~((uint8_t)I2C_OAR1_ADD0);
   }
   /* Send the address */
   I2Cx->DR = Address;

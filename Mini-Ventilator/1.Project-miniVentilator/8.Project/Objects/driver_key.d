@@ -1,6 +1,7 @@
 .\objects\driver_key.o: ..\3.Driver\Driver_Key.c
 .\objects\driver_key.o: ..\3.Driver\Driver_Key.h
-.\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_gpio.h
+.\objects\driver_key.o: ..\7.CMSIS\stm32f4xx_conf.h
+.\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_adc.h
 .\objects\driver_key.o: ..\7.CMSIS\stm32f4xx.h
 .\objects\driver_key.o: ..\7.CMSIS\core_cm4.h
 .\objects\driver_key.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -9,8 +10,6 @@
 .\objects\driver_key.o: ..\7.CMSIS\core_cmSimd.h
 .\objects\driver_key.o: ..\7.CMSIS\system_stm32f4xx.h
 .\objects\driver_key.o: ..\7.CMSIS\stm32f4xx_conf.h
-.\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_adc.h
-.\objects\driver_key.o: ..\7.CMSIS\stm32f4xx.h
 .\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_crc.h
 .\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_dbgmcu.h
 .\objects\driver_key.o: ..\6.Library\inc\stm32f4xx_dma.h

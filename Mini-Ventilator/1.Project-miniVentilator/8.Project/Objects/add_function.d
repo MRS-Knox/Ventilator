@@ -37,3 +37,13 @@
 .\objects\add_function.o: ..\6.Library\inc\stm32f4xx_dma2d.h
 .\objects\add_function.o: ..\6.Library\inc\stm32f4xx_ltdc.h
 .\objects\add_function.o: ..\6.Library\inc\stm32f4xx_sai.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\include\FreeRTOS.h
+.\objects\add_function.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\add_function.o: ..\6.Library\inc\FreeRTOSConfig.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\include\projdefs.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\include\portable.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\include\deprecated_definitions.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
+.\objects\add_function.o: ..\10.FreeRTOS\Source\include\mpu_wrappers.h
+.\objects\add_function.o: ..\4.Common\Use_Struct.h
+.\objects\add_function.o: ..\4.Common\Use_Enum.h

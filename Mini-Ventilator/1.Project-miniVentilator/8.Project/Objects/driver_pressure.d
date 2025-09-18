@@ -38,3 +38,13 @@
 .\objects\driver_pressure.o: ..\6.Library\inc\stm32f4xx_ltdc.h
 .\objects\driver_pressure.o: ..\6.Library\inc\stm32f4xx_sai.h
 .\objects\driver_pressure.o: ..\4.Common\Add_Function.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\include\FreeRTOS.h
+.\objects\driver_pressure.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\driver_pressure.o: ..\6.Library\inc\FreeRTOSConfig.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\include\projdefs.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\include\portable.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\include\deprecated_definitions.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
+.\objects\driver_pressure.o: ..\10.FreeRTOS\Source\include\mpu_wrappers.h
+.\objects\driver_pressure.o: ..\4.Common\Use_Struct.h
+.\objects\driver_pressure.o: ..\4.Common\Use_Enum.h

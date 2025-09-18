@@ -1,7 +1,8 @@
 .\objects\middle_timer.o: ..\2.Middle\Middle_Timer.c
 .\objects\middle_timer.o: ..\2.Middle\Middle_Timer.h
 .\objects\middle_timer.o: ..\3.Driver\Driver_Timer.h
-.\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_tim.h
+.\objects\middle_timer.o: ..\7.CMSIS\stm32f4xx_conf.h
+.\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_adc.h
 .\objects\middle_timer.o: ..\7.CMSIS\stm32f4xx.h
 .\objects\middle_timer.o: ..\7.CMSIS\core_cm4.h
 .\objects\middle_timer.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -10,8 +11,6 @@
 .\objects\middle_timer.o: ..\7.CMSIS\core_cmSimd.h
 .\objects\middle_timer.o: ..\7.CMSIS\system_stm32f4xx.h
 .\objects\middle_timer.o: ..\7.CMSIS\stm32f4xx_conf.h
-.\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_adc.h
-.\objects\middle_timer.o: ..\7.CMSIS\stm32f4xx.h
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_crc.h
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_dbgmcu.h
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_dma.h
@@ -39,3 +38,5 @@
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_dma2d.h
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_ltdc.h
 .\objects\middle_timer.o: ..\6.Library\inc\stm32f4xx_sai.h
+.\objects\middle_timer.o: ..\4.Common\Use_Struct.h
+.\objects\middle_timer.o: ..\4.Common\Use_Enum.h

@@ -42,7 +42,6 @@
 .\objects\stm32f4xx_it.o: ..\2.Middle\Middle_Blower.h
 .\objects\stm32f4xx_it.o: ..\3.Driver\Driver_Blower.h
 .\objects\stm32f4xx_it.o: ..\4.Common\Add_Function.h
-.\objects\stm32f4xx_it.o: ..\6.Library\inc\systick.h
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\FreeRTOS.h
 .\objects\stm32f4xx_it.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\stm32f4xx_it.o: ..\6.Library\inc\FreeRTOSConfig.h
@@ -51,5 +50,11 @@
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\deprecated_definitions.h
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\mpu_wrappers.h
+.\objects\stm32f4xx_it.o: ..\4.Common\FreeRTOS_Define.h
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\task.h
 .\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\list.h
+.\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\queue.h
+.\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\semphr.h
+.\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\event_groups.h
+.\objects\stm32f4xx_it.o: ..\10.FreeRTOS\Source\include\timers.h
+.\objects\stm32f4xx_it.o: ..\6.Library\inc\systick.h
