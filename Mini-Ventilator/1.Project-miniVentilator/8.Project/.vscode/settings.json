@@ -42,6 +42,7 @@
         "stm32f4xx_flash.h": "c",
         "application_machineon.h": "c",
         "event_groups.h": "c",
-        "middle_parameter.h": "c"
+        "middle_parameter.h": "c",
+        "application_machine_onoff.h": "c"
     }
 }

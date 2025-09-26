@@ -17,6 +17,7 @@ void App_Calibration_Task(void *pvParameter){
 	Calibration_t calibration_rec;
 	Run_Param_t run_param;
 	Blower_State_t blower_state;
+	CalibrationData.calflow_count = 1;
 	while(1){
 		calibrate_event = xEventGroupWaitBits(MachineStateEvent_Handle,CalibrateStart_Event,pdFALSE,pdFALSE,0);
 		/* ERROR! */
@@ -34,7 +35,7 @@ void App_Calibration_Task(void *pvParameter){
 					xQueueReceive(RunParamQueue_Handle,&run_param,0);
 					CalibrationData.calflow_buff[CalibrationData.calflow_count++] = run_param.diff_press;
 					if(CalibrationData.calflow_count >= CALFlowMaxCount){
-						CalibrationData.calflow_count = 0;
+						CalibrationData.calflow_count = 1;
 						Mid_CALCoefficient();
 					}	
 				}

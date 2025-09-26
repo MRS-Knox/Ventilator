@@ -60,8 +60,9 @@
 .\objects\application_machine_onoff.o: ..\10.FreeRTOS\Source\include\semphr.h
 .\objects\application_machine_onoff.o: ..\10.FreeRTOS\Source\include\event_groups.h
 .\objects\application_machine_onoff.o: ..\10.FreeRTOS\Source\include\timers.h
-.\objects\application_machine_onoff.o: ..\2.Middle\Middle_Parameter.h
+.\objects\application_machine_onoff.o: ..\2.Middle\Middle_CalculateParameter.h
+.\objects\application_machine_onoff.o: ..\2.Middle\Middle_PID.h
 .\objects\application_machine_onoff.o: ..\2.Middle\Middle_Blower.h
 .\objects\application_machine_onoff.o: ..\3.Driver\Driver_Blower.h
-.\objects\application_machine_onoff.o: ..\2.Middle\Middle_PID.h
+.\objects\application_machine_onoff.o: ..\2.Middle\Middle_BreatheStage.h
 .\objects\application_machine_onoff.o: ..\2.Middle\Middle_ComfortFunction.h

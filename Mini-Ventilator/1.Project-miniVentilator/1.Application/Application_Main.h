@@ -25,7 +25,7 @@
 #include "Middle_Key.h"
 #include "Middle_Timer.h"
 #include "Middle_Voice.h"
-#include "Middle_Algorithm.h"
+//#include "Middle_BreatheStage.h"
 #include "Middle_TestMask.h"
 #include "Middle_Alarm.h"
 #include "Middle_EEPROM.h"

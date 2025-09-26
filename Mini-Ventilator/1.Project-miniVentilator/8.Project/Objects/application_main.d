@@ -74,7 +74,8 @@
 .\objects\application_main.o: ..\3.Driver\Driver_SDP31.h
 .\objects\application_main.o: E:\KEIL\KEIL5\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\application_main.o: ..\3.Driver\Driver_GZP6891D.h
-.\objects\application_main.o: ..\2.Middle\Middle_Parameter.h
+.\objects\application_main.o: ..\2.Middle\Middle_CalculateParameter.h
+.\objects\application_main.o: ..\2.Middle\Middle_BreatheStage.h
 .\objects\application_main.o: ..\2.Middle\Middle_ComfortFunction.h
 .\objects\application_main.o: ..\2.Middle\Middle_RGB.h
 .\objects\application_main.o: ..\3.Driver\Driver_RGB.h
@@ -84,7 +85,6 @@
 .\objects\application_main.o: ..\3.Driver\Driver_Timer.h
 .\objects\application_main.o: ..\2.Middle\Middle_Voice.h
 .\objects\application_main.o: ..\3.Driver\Driver_Voice.h
-.\objects\application_main.o: ..\2.Middle\Middle_Algorithm.h
 .\objects\application_main.o: ..\2.Middle\Middle_TestMask.h
 .\objects\application_main.o: ..\2.Middle\Middle_Alarm.h
 .\objects\application_main.o: ..\2.Middle\Middle_TestPower.h

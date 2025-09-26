@@ -160,18 +160,9 @@ void PowerOn_ValueInit(void){
 	Flow_Kalman.p_last = 0.001f;
 	Flow_Kalman.x_last = 0.001f;
 		
-	// Set_Param.delaypress_min  	   = 5;
-	Set_Param.start_press          = 400;
-	Set_Param.therapy_press        = 1000;
 	/* ------ Read data from flash. ------ */
 	Mid_ReadCALData_Power();
 	
-//	CALPress_Flow.calpress_buff[0] = 17190;
-//	CALPress_Flow.calpress_buff[1] = 24030;
-//	CALPress_Flow.calpress_buff[2] = 29250;
-//	CALPress_Flow.calpress_buff[3] = 33720;
-//	CALPress_Flow.calpress_buff[4] = 37740;
-//	CALPress_Flow.calpress_buff[5] = 41160;
 }
 
 /* Delete all tasks when the power on check is over!!! */
@@ -278,12 +269,12 @@ void CreateTask_Task(void *pvParameter){
 	// 			CALDataTask_Priority,      	//Task priority.
 	// 			&CALDataTaskHandle)	;       //Task handle.
 				
-//	xTaskCreate(MeasureStack		,		//Function name.
-//				"MeasureStack"		,       //Task name.	
-//				MeasureTask_DERTH	,       //Task depth.
-//				NULL				,       //Task parameter.
-//				MeasureTask_Priority,       //Task priority.
-//				&MeasureTaskHandle)	;       //Task handle.
+	xTaskCreate(MeasureStack		,		//Function name.
+				"MeasureStack"		,       //Task name.	
+				MeasureTask_DERTH	,       //Task depth.
+				NULL				,       //Task parameter.
+				MeasureTask_Priority,       //Task priority.
+				&MeasureTaskHandle)	;       //Task handle.
 
 	xTaskCreate(App_Cali_Debug_Function,//Function name.
 				"Debug_Function"	,   	//Task name.	
@@ -298,7 +289,7 @@ UBaseType_t depth[5];
 void MeasureStack(void *pvParameter){
 	while(1){
 		depth[0] = uxTaskGetStackHighWaterMark(CONBlowerTaskHandle);
-//		depth[1] = uxTaskGetStackHighWaterMark(FlowTaskHandle);
+		depth[1] = uxTaskGetStackHighWaterMark(MachineOnOffTaskHandle);
 //		depth[2] = uxTaskGetStackHighWaterMark(RGBTaskHandle);
 //		depth[3] = uxTaskGetStackHighWaterMark(NULL);
 //		depth[4] = uxTaskGetStackHighWaterMark(MachineRunTaskHandle);

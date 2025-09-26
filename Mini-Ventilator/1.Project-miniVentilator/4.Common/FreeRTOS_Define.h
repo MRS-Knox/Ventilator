@@ -16,7 +16,7 @@ extern  TaskHandle_t 					CONBlowerTaskHandle;
 #define CONBlowerTask_Priority		    Max_SoftwarePriority
 
 extern  TaskHandle_t 					MachineOnOffTaskHandle;
-#define MachineOnOffTask_DERTH			100	
+#define MachineOnOffTask_DERTH			1000	
 #define MachineOnOffTask_Priority		6
 
 // extern  TaskHandle_t 					JudgeInsExTaskHandle;

@@ -27,8 +27,6 @@ int Mid_CalculatePRESS(void){
 
 	press_volatage = Dri_ReadPRESS_V()*3300.0f/4095.0f; 	//ADC	->	mV
 	press = (int)(2.00147f*press_volatage - 425.80759f);	//mV 	->	0.1mmH2O
-	// press_volatage = 3.937f*press_volatage - 783.465f; 		//mV 	->	Pa
-	// press = press_volatage * 1.01974f; 						//Pa	->	0.1mmH2O
 	press -= press_com;
 	/* ERROR!!!! */
 	if(press < -1000 || press >= 5000)	

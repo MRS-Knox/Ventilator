@@ -40,7 +40,7 @@ typedef struct{
 
 	unsigned char  delayp_time; 		//The unit is minute.
 	unsigned char  delayp_remaintime;	//Remaining time for delay increase pressure.
-	
+
 	eBreathe_Stage breathe_stage;
 }Run_Param_t;
 

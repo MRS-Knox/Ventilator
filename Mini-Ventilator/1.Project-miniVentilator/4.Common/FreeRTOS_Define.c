@@ -4,7 +4,7 @@
 TaskHandle_t 							RECMotorTaskHandle			= NULL;
 TaskHandle_t 					        CONBlowerTaskHandle		    = NULL;
 TaskHandle_t 							MachineOnOffTaskHandle 	    = NULL;
-// TaskHandle_t 							MeasureTaskHandle			= NULL;
+TaskHandle_t 							MeasureTaskHandle			= NULL;
 // TaskHandle_t 							RGBTaskHandle				= NULL;
 // TaskHandle_t 							WCALDataTaskHandle			= NULL;
 TaskHandle_t 							CALDataTaskHandle			= NULL;

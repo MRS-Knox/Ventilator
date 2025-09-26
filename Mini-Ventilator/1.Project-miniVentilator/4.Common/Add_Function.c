@@ -209,8 +209,8 @@ void Find_MIN_MAX(int *pdata_buff,unsigned char count,int *pmax_data,int *pmin_d
 	@param[out]	 pdata_buff:Point to buff.
 	@retval		 none
 */
-void MoveRight_Range(int *pdata_buff,unsigned char count,int data){
-	for(unsigned char i = 0;i < count-1;i++){
+void MoveRight_Range(int *pdata_buff,unsigned short count,int data){
+	for(unsigned short i = 0;i < count-1;i++){
 		pdata_buff[i] = pdata_buff[i+1];
 	}
 	pdata_buff[count-1] = data;

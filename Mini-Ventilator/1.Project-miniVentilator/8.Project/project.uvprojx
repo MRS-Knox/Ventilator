@@ -419,14 +419,19 @@
           <GroupName>Middle</GroupName>
           <Files>
             <File>
-              <FileName>Middle_Algorithm.c</FileName>
+              <FileName>Middle_BreatheStage.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\2.Middle\Middle_Algorithm.c</FilePath>
+              <FilePath>..\2.Middle\Middle_BreatheStage.c</FilePath>
             </File>
             <File>
               <FileName>Middle_PID.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\2.Middle\Middle_PID.c</FilePath>
+            </File>
+            <File>
+              <FileName>Middle_CalculateParameter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\2.Middle\Middle_CalculateParameter.c</FilePath>
             </File>
             <File>
               <FileName>Middle_ComfortFunction.c</FileName>
@@ -477,11 +482,6 @@
               <FileName>Middle_Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\2.Middle\Middle_Timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>Middle_Parameter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\2.Middle\Middle_Parameter.c</FilePath>
             </File>
             <File>
               <FileName>Middle_Voice.c</FileName>

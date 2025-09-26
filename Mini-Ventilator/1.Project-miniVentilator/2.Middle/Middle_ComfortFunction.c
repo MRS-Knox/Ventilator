@@ -93,7 +93,7 @@ uint16_t Mid_EPR_Function(uint16_t set_press){
 	return_press = set_press * ((80-((Set_Param.epr-1)*10))/100);
 	if(return_press < MACHINE_MINPRESS)
 		return_press = MACHINE_MINPRESS;
-
+	
 	return return_press;
 }
 

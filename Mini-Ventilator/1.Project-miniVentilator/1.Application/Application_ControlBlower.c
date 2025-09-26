@@ -14,7 +14,6 @@ void App_ControlBlower_Task(void *pvParameter){
 	EventBits_t machine_event = 0x00;
 	EventBits_t lastmachine_event = 0x00;
 	eBlowerRunStage blowerstage = Blower_Stop;
-	Run_Param.now_run_p = 1000;
 	while(1){
 		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_Off_Event,pdFALSE,pdFALSE,0);
 		/* Judge machine state. */
@@ -67,14 +66,8 @@ void App_ControlBlower_Task(void *pvParameter){
 				Mid_SendToBlower(SEND_RPM,blower_data.set_rpm);
 				break;
 			case Blower_PIDRPM:
-				if(time_count++ >= 200){		
-					time_count = 0;
-//					Run_Param.now_run_p = 500;
-//					Run_Param.now_run_p = Run_Param.now_run_p==1000 ? 500 : 1000;
-				}
-//				xQueueReceive(RunParamQueue_Handle,&run_param,0);
-//				Mid_IncreasePID(run_param.now_run_p,(uint16_t)measure_press);
-				Mid_IncreasePID(Run_Param.now_run_p,(uint16_t)measure_press);
+				xQueueReceive(RunParamQueue_Handle,&run_param,0);
+				Mid_IncreasePID(run_param.now_run_p,(uint16_t)measure_press);
 				break;
 			default:break;
 		}

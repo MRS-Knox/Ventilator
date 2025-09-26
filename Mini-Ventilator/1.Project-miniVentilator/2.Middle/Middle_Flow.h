@@ -17,7 +17,7 @@ void Mid_Flow_Init(void);
 /* Reset sensor. */
 void Mid_SDP31_RESET(void);
 /* This function is about to calculate flow. */
-int Mid_CalculateFlow(void);
+int Mid_CalculateFlow(int now_flow);
 
 
 #endif

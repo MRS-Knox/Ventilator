@@ -29,7 +29,7 @@ unsigned short Calculate_DataComplement(unsigned short data);
 /* Find maximum value and minimum value. */
 void Find_MIN_MAX(int *pdata_buff,unsigned char count,int *pmax_data,int *pmin_data);
 /* Move right range. */
-void MoveRight_Range(int *pdata_buff,unsigned char count,int data);
+void MoveRight_Range(int *pdata_buff,unsigned short count,int data);
 /* Calculate the number of hours between two times. */
 unsigned int CALHour_BetweenTwoTime(unsigned char *pstart_time,unsigned char *pstop_time);
 
