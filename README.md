@@ -1,1 +1,0 @@
-MRS mini-ventilator program.
