@@ -210,8 +210,8 @@ void Find_MIN_MAX(int *pdata_buff,unsigned int count,int *pmax_data,int *pmin_da
 	@retval		 ErrorStatus:....
 */
 ErrorStatus MoveRight_Range(int *pdata_buff,unsigned short count,int data){
-	if(data - pdata_buff[count-1] > 2000 || data - pdata_buff[count-1] < -2000)
-		return ERROR;
+//	if(data - pdata_buff[count-1] > 2000 || data - pdata_buff[count-1] < -2000)
+//		return ERROR;
 	for(unsigned short i = 0;i < count-1;i++){
 		pdata_buff[i] = pdata_buff[i+1];
 	}

@@ -6,12 +6,16 @@
 	@param[out]	 none
 	@retval		 none
 */
+int flow_buff1[1000],std_buff1[1000],stdmean_buff1[1000],stage_buff1[1000],exend_buff1[1000];
+uint16_t press_buff1[1000],press_buff2[1000],press_buff3[1000];
+uint16_t debug_breath_count = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
 	ErrorStatus err_move = ERROR;
 	int flow_buff[MAXFLOWBUFF_COUNT];
 	uint16_t flow_buff_count = 0;
+	int std_buff[MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH];
 	EventBits_t machine_event = 0x00;
 	eMachine_RunStage run_stage = Machine_Stop; 
 	while(1){
@@ -54,8 +58,11 @@ void App_Machine_OnOff_Task(void *pvParameter){
 									   						Run_Param.delayp_time,
 															Set_Param.start_press,
 															Run_Param.delay_end_p);
-				if(Machine_State.flag_delaypress == RESET)
+				if(Machine_State.flag_delaypress == RESET || Run_Param.now_set_p >= Run_Param.delay_end_p){
+					Machine_State.flag_delaypress = RESET;
+					Run_Param.now_set_p = Run_Param.delay_end_p;
 					run_stage = Machine_Run;
+				}
 				break;
 			case Machine_Run:
 				
@@ -70,20 +77,32 @@ void App_Machine_OnOff_Task(void *pvParameter){
 				if(flow_buff_count++ >= MAXFLOWBUFF_COUNT+50){	//Delete the first 50 points -- 1s.
 					flag_machine_start = RESET;
 					flow_buff_count = 0;
-					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff);
-				}	
+					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
+//
+					for(;debug_breath_count < MAXFLOWBUFF_COUNT;debug_breath_count++){
+						flow_buff1[debug_breath_count] = flow_buff[debug_breath_count];
+						if(debug_breath_count < MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH)
+							std_buff1[debug_breath_count] = std_buff[debug_breath_count];
+					}
+//
+				}
 			}
-			else{
-//				Run_Param.breathe_stage = Mid_Judge_BreatheStage(&flow_buff[MAXFLOWBUFF_COUNT-20],20,Run_Param.breathe_stage);
-			}
-
-				
-//				if(Run_Param.breathe_stage == Ins_Start || Run_Param.breathe_stage == Ins_End)
-//					Run_Param.now_run_p = Mid_Inspiration_Stage(Run_Param.now_set_p,Run_Param.breathe_stage);
-//				else if(Run_Param.breathe_stage == Ex_Start || Run_Param.breathe_stage == Ex_End)
-//					Run_Param.now_run_p = Mid_Expiration_Stage(Run_Param.now_set_p,Run_Param.breathe_stage);
-//				else if(Run_Param.breathe_stage == None)
-//					Run_Param.now_run_p = Run_Param.now_set_p;
+			else if(flag_machine_start == RESET && err_move == SUCCESS){
+//
+				flow_buff1[debug_breath_count] = Run_Param.flow_data;
+				std_buff1[debug_breath_count-LITTLERANGE_LENGENTH] = std_buff[MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH-1];
+				stage_buff1[debug_breath_count] = Run_Param.breathe_stage;
+				exend_buff1[debug_breath_count] = Run_Param.ex_end_flow;
+				press_buff1[debug_breath_count] = Run_Param.now_run_p;
+				press_buff2[debug_breath_count] = Run_Param.now_set_p;
+				press_buff3[debug_breath_count] = Run_Param.measure_p;
+				Mid_Judge_BreatheStage(flow_buff,&Run_Param.ex_end_flow,std_buff,&Run_Param.breathe_stage,&stdmean_buff1[debug_breath_count]);
+				if(++debug_breath_count >= 1000)
+					debug_breath_count = 0;
+				if(Run_Param.breathe_stage == None)
+					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
+				Run_Param.now_run_p = Mid_Process_BreatheStage(Run_Param.now_set_p,Run_Param.breathe_stage);
+			}				
 		}
 		else{
 			flow_buff_count = 0;
@@ -104,9 +123,10 @@ void App_Machine_OnOff_Task(void *pvParameter){
 void App_MachineOn_SetParam(void){
 	/* Delete!!! */
 	Set_Param.mode = CPAP;
-	Set_Param.delaypress_min = 5;
+	Set_Param.delaypress_min = 0;
 	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 1000;
+	Set_Param.therapy_press  = 400;
+	Set_Param.epr = 3;
 
 	/*--------------------------------------------*/
 	Run_Param.now_run_p = Set_Param.start_press;
@@ -161,6 +181,7 @@ void App_MachineOff_ClearParam(void){
 	Run_Param.delayp_time 		= 0;
 	Run_Param.delayp_remaintime = 0;
 	Run_Param.breathe_stage 	= None;
+	Run_Param.ex_end_flow 		= 0;
 }
 
 
