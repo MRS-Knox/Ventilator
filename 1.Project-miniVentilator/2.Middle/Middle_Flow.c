@@ -1,7 +1,7 @@
 #include "Middle_Flow.h"
 
-float sensorbuff_sdp_nofilter;
-float sensorbuff_sdp_filter;
+void Mid_SDP31_WriteCMD(uint16_t data);
+
 
 /*!
 	@brief 		 This initial function is about flow sensor hardware.
@@ -93,12 +93,15 @@ void Mid_SDP31_ReadData(uint16_t *scale_factor,uint8_t *sdp31_value){
 	@retval		 ErrorStatus:CRC whether right
 */
 ErrorStatus Mid_SDP31Data_Process(int *pdiffdata){
+	static uint8_t flag_sdp3xcmd = 0;
 	uint16_t minus_value = 0;
 	uint8_t sdp31_data[6];
 	uint16_t scale = 0;
 	float diffdata = 0.0f;
-
-	Mid_SDP31_WriteCMD(DIFF_PRESS_CONTINUOUS);
+	if(flag_sdp3xcmd == 0){
+		flag_sdp3xcmd = 1;
+		Mid_SDP31_WriteCMD(DIFF_PRESS_CONTINUOUS);
+	}
 	Mid_SDP31_ReadData(&scale,sdp31_data);    
 	
 	if(sdp31_data[2] == Check_SensorCRC8(sdp31_data,2)){	
@@ -109,11 +112,8 @@ ErrorStatus Mid_SDP31Data_Process(int *pdiffdata){
 		else	
 			diffdata = (float)((sdp31_data[0]<<8) + sdp31_data[1])/scale;
 		
-		sensorbuff_sdp_nofilter = -diffdata;
 		diffdata = Kalman_Filter(&Flow_Kalman,diffdata);
-		sensorbuff_sdp_filter = -diffdata;	
 		*pdiffdata = (int)(-diffdata*100);
-		
 		return SUCCESS;		
 	}
 	return ERROR;

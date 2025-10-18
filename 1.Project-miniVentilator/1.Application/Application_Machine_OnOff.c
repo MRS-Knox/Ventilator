@@ -6,9 +6,7 @@
 	@param[out]	 none
 	@retval		 none
 */
-int flow_buff1[1000],std_buff1[1000],stdmean_buff1[1000],stage_buff1[1000],exend_buff1[1000];
-uint16_t press_buff1[1000],press_buff2[1000],press_buff3[1000];
-uint16_t debug_breath_count = 0;
+unsigned char machine_onoff_time = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
@@ -19,6 +17,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 	EventBits_t machine_event = 0x00;
 	eMachine_RunStage run_stage = Machine_Stop; 
 	while(1){
+		machine_onoff_time = machine_onoff_time>200 ? 0 : machine_onoff_time+1;
 		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_On_Event,pdFALSE,pdFALSE,0);
 		/* ERROR!!! */
 		if((machine_event&Machine_On_Event) == Machine_On_Event && (machine_event&Machine_Off_Event) == Machine_Off_Event){
@@ -78,30 +77,13 @@ void App_Machine_OnOff_Task(void *pvParameter){
 					flag_machine_start = RESET;
 					flow_buff_count = 0;
 					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
-//
-					for(;debug_breath_count < MAXFLOWBUFF_COUNT;debug_breath_count++){
-						flow_buff1[debug_breath_count] = flow_buff[debug_breath_count];
-						if(debug_breath_count < MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH)
-							std_buff1[debug_breath_count] = std_buff[debug_breath_count];
-					}
-//
 				}
 			}
 			else if(flag_machine_start == RESET && err_move == SUCCESS){
-//
-				flow_buff1[debug_breath_count] = Run_Param.flow_data;
-				std_buff1[debug_breath_count-LITTLERANGE_LENGENTH] = std_buff[MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH-1];
-				stage_buff1[debug_breath_count] = Run_Param.breathe_stage;
-				exend_buff1[debug_breath_count] = Run_Param.ex_end_flow;
-				press_buff1[debug_breath_count] = Run_Param.now_run_p;
-				press_buff2[debug_breath_count] = Run_Param.now_set_p;
-				press_buff3[debug_breath_count] = Run_Param.measure_p;
-				Mid_Judge_BreatheStage(flow_buff,&Run_Param.ex_end_flow,std_buff,&Run_Param.breathe_stage,&stdmean_buff1[debug_breath_count]);
-				if(++debug_breath_count >= 1000)
-					debug_breath_count = 0;
+				Mid_Judge_BreatheStage(flow_buff,&Run_Param.ex_end_flow,std_buff,&Run_Param.breathe_stage);
 				if(Run_Param.breathe_stage == None)
 					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
-				Run_Param.now_run_p = Mid_Process_BreatheStage(Run_Param.now_set_p,Run_Param.breathe_stage);
+				Run_Param.now_run_p = Mid_CalculateRunPRESS(Run_Param.now_set_p,Run_Param.breathe_stage);
 			}				
 		}
 		else{
@@ -125,8 +107,8 @@ void App_MachineOn_SetParam(void){
 	Set_Param.mode = CPAP;
 	Set_Param.delaypress_min = 0;
 	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 400;
-	Set_Param.epr = 3;
+	Set_Param.therapy_press  = 1000;
+	Set_Param.epr = 5;
 
 	/*--------------------------------------------*/
 	Run_Param.now_run_p = Set_Param.start_press;

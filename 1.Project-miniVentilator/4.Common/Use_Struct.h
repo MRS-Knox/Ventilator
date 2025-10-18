@@ -25,16 +25,13 @@ typedef struct{
 }Blower_State_t;
 
 /* Machine runs parameters struct. */
-typedef struct{
+typedef struct{	
 	int diff_press;
 	int flow_data;  					//0.01 lpm	
 	int flow_baseline;
 	int max_flow;
 	int min_flow;
 	int ex_end_flow;
-	// long int ins_flow;
-	// long int ex_flow;
-	// long int breath_totalflow;
 
 	short measure_p; 					//0.01 cmH2O
 	unsigned short now_set_p;
@@ -44,6 +41,11 @@ typedef struct{
 
 	unsigned char  delayp_time; 		//The unit is minute.
 	unsigned char  delayp_remaintime;	//Remaining time for delay increase pressure.
+	
+	unsigned short ins_time;			//1ms
+	unsigned short ex_time;				//1ms
+	unsigned char  ins_ex_scale[2];		//Inspiration : Expiration.Remain one decimal:0.1 -> 10.
+	unsigned short bpm;					//Remain one decimal:0.1 -> 10.
 
 	eBreathe_Stage breathe_stage;
 }Run_Param_t;

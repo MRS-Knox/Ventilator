@@ -31,6 +31,7 @@
 #include "semphr.h"
 #include "event_groups.h"
 #include "FreeRTOS_Define.h"
+#include "Middle_CalculateParameter.h"
 /** @addtogroup STM32F4xx_StdPeriph_Examples
   * @{
   */
@@ -175,8 +176,8 @@ void USART2_IRQHandler(void){
 #define MAX_COUNT_10MS      30000000
 void TIM6_DAC_IRQHandler(){
 	if(TIM_GetITStatus(TIM6,TIM_IT_Update) != RESET){
-		TIM_ClearITPendingBit(TIM6,TIM_IT_Update);
-        
+		TIM_ClearITPendingBit(TIM6,TIM_IT_Update);	
+		
 		Machine_Time.basetime_10ms = Machine_Time.basetime_10ms>=MAX_COUNT_10MS ? 0 : Machine_Time.basetime_10ms+1;
         
         if(Machine_State.flag_machine_onoff == SET)
@@ -212,6 +213,10 @@ void TIM6_DAC_IRQHandler(){
                 }
             }
         }
+        /* ----------------- Update BPM ------------------- */
+		if(Machine_State.flag_machine_onoff == SET)
+			Mid_Update_PARAM_AboutBPM(Run_Param.breathe_stage);
+
 	}	
 }
 

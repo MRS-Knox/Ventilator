@@ -81,17 +81,5 @@ void Mid_AutoOn_AutoOff(int flow_data){
 	}
 }
 
-/*!
-	@brief 		 This function is about ventilator release expiration pressure.
-	@param[in]	 set_press:Machine current run pressure.
-	@param[out]	 none
-	@retval		 return_press:Running pressure.
-*/
-uint16_t Mid_EPR_Function(uint16_t set_press){
-	uint16_t return_press = set_press - (Set_Param.epr*50);
-
-	return (return_press < MACHINE_MINPRESS ? MACHINE_MINPRESS : return_press);
-}
-
 
 

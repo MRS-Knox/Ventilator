@@ -91,7 +91,7 @@ void FLOW_Ack(){
 	FLOW_SDA_Low;
 	udelay_1us(2);
 	FLOW_SCL_High;
-	udelay_1us(3);
+	udelay_1us(2);
 	FLOW_SCL_Low;
 }
 
@@ -171,7 +171,7 @@ void FLOW_Write_Byte(uint8_t data){
 		}
 		udelay_1us(2);
 		FLOW_SCL_High;
-		udelay_1us(5);
+		udelay_1us(2);
 	}
 	FLOW_SCL_Low;
 }
@@ -191,7 +191,7 @@ uint8_t FLOW_Read_Byte(){
 	FLOW_SCL_Low;	
 	for(count = 0;count < 8;count++){
 		FLOW_SCL_Low;
-		udelay_1us(5);
+		udelay_1us(2);
 		
 		FLOW_SCL_High;
 		data <<= 1;
