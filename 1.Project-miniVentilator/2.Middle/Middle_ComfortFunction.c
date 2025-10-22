@@ -1,9 +1,5 @@
 #include "Middle_ComfortFunction.h"
 
-#define AUTOON_FLOW			1000	//10lpm
-#define AUTOOFF_FLOW		10000	//100lpm
-
-
 /*!
 	@brief 		 This function is about ventilator delay increase pressure function.
 	@param[in]	 flag_delay:The flag for this function. 
@@ -50,35 +46,98 @@ uint16_t Mid_DelayIncreasePRESS(FlagStatus flag_delay,uint16_t real_time,uint8_t
 }
 
 /*!
-	@brief 		 This function is about ventilator auto on and auto off.
-	@param[in]	 flow_data:Flow value. 
+	@brief 		 Release pressure when the breathing stage is expiration.
+	@param[in]	 *prun_press:.....
+				 set_press:Current pressure.
+				 now_stage:Breathe stage.
+	@param[out]	 *prun_press:.....
+	@retval		 return_press:Running pressure.
+*/
+void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
+	uint16_t epr_press = set_press - (Set_Param.epr*50);
+	uint16_t return_press = 0;
+			
+	if(now_stage == None || now_stage == Error){
+		return_press = *prun_press;
+	}
+	else if(now_stage == Ins_Start || now_stage == Ins_End){
+		if(*prun_press < set_press)
+			return_press = *prun_press + 3;
+		else
+			return_press = set_press;
+	}
+	else if(now_stage == Ex_Start || now_stage == Ex_End){
+		return_press = epr_press;
+		return_press = return_press<MACHINE_MINPRESS ? MACHINE_MINPRESS : return_press;
+	}
+	*prun_press = return_press;
+}
+
+/*!
+	@brief 		 Auto open machine and auto close machine.
+	@param[in]	 flow_data:....
 	@param[out]	 none
 	@retval		 none
 */
-void Mid_AutoOn_AutoOff(int flow_data){
+#define AUTOON_MAXFLOW		500	
+#define AUTOON_MINFLOW		-500
+#define AUTOOFF_FLOW		10000	
+void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
 	static uint8_t autoon_count = 0;
 	static uint8_t autooff_count = 0;
-	
-	if(Machine_State.flag_machine_onoff == RESET && Set_Param.flag_auto_on == SET){
-		if(flow_data >= AUTOON_FLOW){
-			if(autoon_count++ >= 3){
-				autoon_count = 0;
-				xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
-			}
-		}
-		else if(flow_data < AUTOON_FLOW)
-			autoon_count = 0;
+
+	if((event_bit&TestMask_Start_Event) == TestMask_Start_Event || (event_bit&CalibrateStartBlower_Event) == CalibrateStartBlower_Event ||
+		(Set_Param.flag_auto_on == RESET && Set_Param.flag_auto_off == RESET)){
+		autoon_count = 0;
+		autooff_count = 0;
+		return;
 	}
-	if(Machine_State.flag_machine_onoff == SET && Set_Param.flag_auto_off == SET){
+
+	if((event_bit&Machine_On_Event) == Machine_On_Event && Set_Param.flag_auto_off == SET){
+		autoon_count = 0;
 		if(flow_data >= AUTOOFF_FLOW){
-			if(autooff_count++ >= 3){
+			if(autooff_count++ >= 50){	//1s
 				autooff_count = 0;
+				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
 				xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
+				Machine_State.flag_machine_onoff = RESET;
 			}
 		}
-		else if(flow_data < AUTOOFF_FLOW)
+		else 
 			autooff_count = 0;
 	}
+	else if((event_bit&Machine_Off_Event) == Machine_Off_Event && Set_Param.flag_auto_on == SET){
+		autooff_count = 0;
+		if(flow_data > AUTOON_MAXFLOW){
+			
+		}
+	}
+	else{
+		autoon_count = 0;
+		autooff_count = 0;
+	}
+	
+	// if(Machine_State.flag_machine_onoff == RESET && Set_Param.flag_auto_on == SET){
+	// 	if(flow_data >= AUTOON_FLOW){
+	// 		if(autoon_count++ >= 3){
+	// 			autoon_count = 0;
+	// 			xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
+	// 			xEventGroupClearBits(MachineStateEvent_Handle,Machine_Off_Event);
+	// 		}
+	// 	}
+	// 	else if(flow_data < AUTOON_FLOW)
+	// 		autoon_count = 0;
+	// }
+	// if(Machine_State.flag_machine_onoff == SET && Set_Param.flag_auto_off == SET){
+	// 	if(flow_data >= AUTOOFF_FLOW){
+	// 		if(autooff_count++ >= 3){
+	// 			autooff_count = 0;
+	// 			xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
+	// 		}
+	// 	}
+	// 	else if(flow_data < AUTOOFF_FLOW)
+	// 		autooff_count = 0;
+	// }
 }
 
 

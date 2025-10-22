@@ -10,10 +10,9 @@ unsigned char machine_onoff_time = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
-	ErrorStatus err_move = ERROR;
 	int flow_buff[MAXFLOWBUFF_COUNT];
 	uint16_t flow_buff_count = 0;
-	int std_buff[MAXFLOWBUFF_COUNT-LITTLERANGE_LENGENTH];
+	int flow_mean5 = 0;
 	EventBits_t machine_event = 0x00;
 	eMachine_RunStage run_stage = Machine_Stop; 
 	while(1){
@@ -22,6 +21,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 		/* ERROR!!! */
 		if((machine_event&Machine_On_Event) == Machine_On_Event && (machine_event&Machine_Off_Event) == Machine_Off_Event){
 			xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
+			Machine_State.flag_machine_onoff = RESET;
 			machine_event &= (~Machine_On_Event); 
 		}
 
@@ -48,8 +48,13 @@ void App_Machine_OnOff_Task(void *pvParameter){
 			case Machine_Start:
 				flag_clearparam = SET;
 				App_MachineOn_SetParam();
-				if((machine_event&MachineOn_PID_Event) == MachineOn_PID_Event)
-					run_stage = Machine_DelayIP;
+				if((machine_event&MachineOn_PID_Event) == MachineOn_PID_Event){
+					if(Machine_State.flag_delaypress == SET)
+						run_stage = Machine_DelayIP;
+					else
+						run_stage = Machine_NoDelayIP;
+				}
+					
 				break;				
 			case Machine_DelayIP:
 				Run_Param.now_set_p = Mid_DelayIncreasePRESS(Machine_State.flag_delaypress,
@@ -63,33 +68,50 @@ void App_Machine_OnOff_Task(void *pvParameter){
 					run_stage = Machine_Run;
 				}
 				break;
+			case Machine_NoDelayIP:
+				if(flag_machine_start == RESET){
+					if(Run_Param.now_set_p++ >= Run_Param.delay_end_p){
+						Run_Param.now_set_p = Run_Param.delay_end_p;
+						run_stage = Machine_Run;
+					}					
+				}
+				break;
 			case Machine_Run:
-				
+				//AHI....
 				break;
 			default:break;
 		}
-		
 		/* Judge the breathing stage and update the control pressure. */
-		if(run_stage == Machine_DelayIP || run_stage == Machine_Run){
-			err_move = MoveRight_Range(flow_buff,MAXFLOWBUFF_COUNT,Run_Param.flow_data);
-			if(flag_machine_start == SET && err_move == SUCCESS){
-				if(flow_buff_count++ >= MAXFLOWBUFF_COUNT+50){	//Delete the first 50 points -- 1s.
-					flag_machine_start = RESET;
+		if(Machine_DelayIP <= run_stage && run_stage <= Machine_Run){
+			/* Machine is just starting. */
+			if(flag_machine_start == SET){
+				flow_buff[flow_buff_count++] = Run_Param.flow_data;
+				Run_Param.flow_sum += Run_Param.flow_data;
+				if(flow_buff_count >= MAXFLOWBUFF_COUNT-4){
+					flow_mean5 = FlowAverage_Filter(&flow_buff[flow_buff_count-5],5);
+					MoveRight_Range(Run_Param.flow_mean_5,5,flow_mean5);
+				}
+				if(flow_buff_count >= MAXFLOWBUFF_COUNT){
 					flow_buff_count = 0;
-					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
+					flag_machine_start = RESET;
 				}
 			}
-			else if(flag_machine_start == RESET && err_move == SUCCESS){
-				Mid_Judge_BreatheStage(flow_buff,&Run_Param.ex_end_flow,std_buff,&Run_Param.breathe_stage);
-				if(Run_Param.breathe_stage == None)
-					Run_Param.ex_end_flow = Mid_Update_EXEnd_Flow(flow_buff,std_buff);
-				Run_Param.now_run_p = Mid_CalculateRunPRESS(Run_Param.now_set_p,Run_Param.breathe_stage);
-			}				
+			/* Machine is running. */
+			else{
+				Run_Param.flow_sum = (Run_Param.flow_sum-flow_buff[0])+Run_Param.flow_data;
+				Run_Param.flow_mean = Run_Param.flow_sum / MAXFLOWBUFF_COUNT;
+				MoveRight_Range(flow_buff,MAXFLOWBUFF_COUNT,Run_Param.flow_data);
+				flow_mean5 = FlowAverage_Filter(&flow_buff[MAXFLOWBUFF_COUNT-5],5);
+				MoveRight_Range(Run_Param.flow_mean_5,5,flow_mean5);
+				Mid_Judge_BreatheStage(flow_buff,Run_Param.flow_mean,Run_Param.flow_mean_5,&Run_Param.breathe_stage);
+				Mid_EPR(&Run_Param.now_run_p,Run_Param.now_set_p,Run_Param.breathe_stage);
+			}
 		}
 		else{
 			flow_buff_count = 0;
 			flag_machine_start = SET;
 		}
+		Mid_AutoOn_AutoOff(Run_Param.flow_data,machine_event);
 		
 		xQueueOverwrite(RunParamQueue_Handle,&Run_Param);
 		vTaskDelay(pdMS_TO_TICKS(20));
@@ -107,8 +129,9 @@ void App_MachineOn_SetParam(void){
 	Set_Param.mode = CPAP;
 	Set_Param.delaypress_min = 0;
 	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 1000;
+	Set_Param.therapy_press  = 2000;
 	Set_Param.epr = 5;
+	Set_Param.flag_auto_off = SET;
 
 	/*--------------------------------------------*/
 	Run_Param.now_run_p = Set_Param.start_press;
@@ -121,14 +144,12 @@ void App_MachineOn_SetParam(void){
 	Machine_Time.machine_runtime_10ms = 0;
 	
 	/* About delay increase pressure. */
-	Machine_State.flag_delaypress = SET;
 	if(Set_Param.delaypress_min > 0){
+		Machine_State.flag_delaypress = SET;
 		Run_Param.delayp_time = Set_Param.delaypress_min;
 		Run_Param.delayp_remaintime = Run_Param.delayp_time;
 	}
-	else if(Set_Param.delaypress_min == 0){
-		Run_Param.delayp_time = 1;
-	}
+
 }
 
 /*!
@@ -153,9 +174,6 @@ void App_MachineOff_ClearParam(void){
 	Machine_Time.push_btkey_time_10ms	= 0;
 
 	/* ------ Run_Param ------- */
-	// Run_Param.ins_flow 			= 0;
-	// Run_Param.ex_flow  			= 0;
-	// Run_Param.breath_totalflow 	= 0;
 	Run_Param.measure_p 		= 0;
 	Run_Param.now_set_p 		= 0;
 	Run_Param.now_run_p 		= 0;
@@ -163,7 +181,10 @@ void App_MachineOff_ClearParam(void){
 	Run_Param.delayp_time 		= 0;
 	Run_Param.delayp_remaintime = 0;
 	Run_Param.breathe_stage 	= None;
-	Run_Param.ex_end_flow 		= 0;
+	Run_Param.flow_mean			= 0;
+	Run_Param.flow_sum			= 0;
+	Run_Param.max_flow			= 0;
+	Run_Param.min_flow			= 0;
 }
 
 

@@ -6,6 +6,7 @@
 	@param[out]	 none
 	@retval		 none
 */
+unsigned char controlblower_time = 0;
 void App_ControlBlower_Task(void *pvParameter){
 	int measure_press = 0;
 	uint8_t time_count = 0;
@@ -15,6 +16,7 @@ void App_ControlBlower_Task(void *pvParameter){
 	EventBits_t lastmachine_event = 0x00;
 	eBlowerRunStage blowerstage = Blower_Stop;
 	while(1){
+		controlblower_time = controlblower_time>200 ? 0 : controlblower_time+1;
 		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_Off_Event,pdFALSE,pdFALSE,0);
 		/* Judge machine state. */
 		if(blowerstage == Blower_Stop){
@@ -33,10 +35,12 @@ void App_ControlBlower_Task(void *pvParameter){
 			if((machine_event&TestMask_Start_Event) == TestMask_Start_Event && (lastmachine_event&TestMask_Start_Event) != TestMask_Start_Event){
 				blowerstage = Blower_Stop;
 				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event|CalibrateStartBlower_Event);
+				Machine_State.flag_machine_onoff = RESET;
 			}
 			if((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event && (lastmachine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event){
 				blowerstage = Blower_Stop;
 				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event|TestMask_Start_Event);
+				Machine_State.flag_machine_onoff = RESET;
 			}
 		}
 	

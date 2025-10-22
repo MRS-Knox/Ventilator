@@ -4,7 +4,7 @@
 #include "Use_Enum.h"
 #include "stm32f4xx_conf.h"
 
-#define MAXFLOWBUFF_COUNT				300		//6s -- 300 points(f = 50hz).
+#define MAXFLOWBUFF_COUNT				100		//2s -- 100 points(f = 50hz).
 #define MACHINE_MINPRESS 				200		//2cmH2O	
 #define MACHINE_MAXPRESS 				2500	//25cmH2O	
 #define SINGLEMACHINERUN_MAXTIME		168		//168hour -- 1week
@@ -28,10 +28,11 @@ typedef struct{
 typedef struct{	
 	int diff_press;
 	int flow_data;  					//0.01 lpm	
-	int flow_baseline;
+	long int flow_sum;
+	int flow_mean;
+	int flow_mean_5[5];
 	int max_flow;
 	int min_flow;
-	int ex_end_flow;
 
 	short measure_p; 					//0.01 cmH2O
 	unsigned short now_set_p;
@@ -68,7 +69,7 @@ typedef struct{
 	
 	/* Comfort parameters. */
 	unsigned char delaypress_min; 	
-	unsigned char epr;					//Expiration pressure release.
+	unsigned char epr;					
 	FlagStatus 	  flag_auto_on;
 	FlagStatus 	  flag_auto_off;
 	unsigned char pipe_type;
