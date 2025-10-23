@@ -46,19 +46,19 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_S
 	}
 	/* Calculate the phase about breathe. */
 	if(flag_node_ins == SET && mean < pmean5_buff[4]){
-		if(k > 18.0f){
+		if(k > 30.0f){
 			ins_count1++;
 		}
 		else
 			ins_count1 = ins_count1<=1 ? 0 : ins_count1-1;
-		if(ins_count1 >= 10){
+		if(ins_count1 >= 5){
 			ins_count1 = 0;
 			flag_node_ins = RESET;
 			*pstage = Ins_Start;
 		}
 	}
 	if(flag_node_ex == SET && mean > pmean5_buff[4]){
-		if(k < -10.0f){
+		if(k < -30.0f){
 			if(ex_count1++ >= 5){
 				ex_count1 = 0;
 				flag_node_ex = RESET;

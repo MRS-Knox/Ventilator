@@ -4,7 +4,7 @@
 #include "Use_Enum.h"
 #include "stm32f4xx_conf.h"
 
-#define MAXFLOWBUFF_COUNT				100		//2s -- 100 points(f = 50hz).
+#define MAXFLOWBUFF_COUNT				200		//2s -- 100 points(f = 50hz).
 #define MACHINE_MINPRESS 				200		//2cmH2O	
 #define MACHINE_MAXPRESS 				2500	//25cmH2O	
 #define SINGLEMACHINERUN_MAXTIME		168		//168hour -- 1week

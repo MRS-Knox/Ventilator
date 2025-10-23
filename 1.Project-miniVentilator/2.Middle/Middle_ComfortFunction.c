@@ -54,22 +54,44 @@ uint16_t Mid_DelayIncreasePRESS(FlagStatus flag_delay,uint16_t real_time,uint8_t
 	@retval		 return_press:Running pressure.
 */
 void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
+	static uint8_t flag_uppress = 0;
+	uint8_t ins_up_press = 80;
+	uint8_t up_step = 10;
+	uint8_t down_step = 10;
 	uint16_t epr_press = set_press - (Set_Param.epr*50);
 	uint16_t return_press = 0;
 			
 	if(now_stage == None || now_stage == Error){
+		flag_uppress = 0;
 		return_press = *prun_press;
 	}
 	else if(now_stage == Ins_Start || now_stage == Ins_End){
-		if(*prun_press < set_press)
-			return_press = *prun_press + 3;
-		else
+		if(flag_uppress == 0){
+			if(*prun_press < set_press+ins_up_press)
+				return_press = *prun_press + up_step;
+			else{
+				flag_uppress = 1;
+				return_press = set_press+ins_up_press;
+			}
+		}
+		else if(flag_uppress == 1){
+			if(*prun_press > set_press){
+				return_press = *prun_press - down_step;
+			}
+			else{
+				flag_uppress = 2;
+				return_press = set_press;
+			}
+		}
+		else if(flag_uppress == 2)
 			return_press = set_press;
 	}
 	else if(now_stage == Ex_Start || now_stage == Ex_End){
+		flag_uppress = 0;
 		return_press = epr_press;
 		return_press = return_press<MACHINE_MINPRESS ? MACHINE_MINPRESS : return_press;
 	}
+
 	*prun_press = return_press;
 }
 
@@ -80,23 +102,29 @@ void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
 	@retval		 none
 */
 #define AUTOON_MAXFLOW		500	
-#define AUTOON_MINFLOW		-500
-#define AUTOOFF_FLOW		10000	
+#define AUTOON_MINFLOW		-400
+#define AUTOOFF_FLOW		10000
 void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
+	static FlagStatus flag_max = RESET;
 	static uint8_t autoon_count = 0;
+	static uint8_t autoon_count1 = 0;
+	static uint8_t flag_max_time = 0;
 	static uint8_t autooff_count = 0;
-
 	if((event_bit&TestMask_Start_Event) == TestMask_Start_Event || (event_bit&CalibrateStartBlower_Event) == CalibrateStartBlower_Event ||
 		(Set_Param.flag_auto_on == RESET && Set_Param.flag_auto_off == RESET)){
+		flag_max = RESET;
 		autoon_count = 0;
+		autoon_count1 = 0;
 		autooff_count = 0;
 		return;
 	}
 
 	if((event_bit&Machine_On_Event) == Machine_On_Event && Set_Param.flag_auto_off == SET){
+		flag_max = RESET;
 		autoon_count = 0;
+		autoon_count1 = 0;
 		if(flow_data >= AUTOOFF_FLOW){
-			if(autooff_count++ >= 50){	//1s
+			if(autooff_count++ >= 250){	//5s
 				autooff_count = 0;
 				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
 				xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
@@ -108,36 +136,37 @@ void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
 	}
 	else if((event_bit&Machine_Off_Event) == Machine_Off_Event && Set_Param.flag_auto_on == SET){
 		autooff_count = 0;
-		if(flow_data > AUTOON_MAXFLOW){
-			
+		if(flow_data > AUTOON_MAXFLOW && flag_max == RESET){
+			flag_max = SET;
+			flag_max_time = 0;
+		}
+		else if(flow_data < AUTOON_MINFLOW && flag_max == SET){
+			if(autoon_count++ >= 10){
+				autoon_count = 0;
+				flag_max = RESET;
+				if((++autoon_count1) >= 3){
+					autoon_count1 = 0;
+					xEventGroupClearBits(MachineStateEvent_Handle,Machine_Off_Event);
+					xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
+					Machine_State.flag_machine_onoff = SET;				
+				}
+			}
+		}
+		else if(flow_data >= AUTOON_MINFLOW && (flag_max == SET || autoon_count1 > 0)){
+			if(flag_max_time++ >= 150){ //3s
+				flag_max_time = 0;
+				flag_max = RESET;
+				autoon_count = 0;
+				autoon_count1 = 0;
+			}	
 		}
 	}
 	else{
+		flag_max = RESET;
 		autoon_count = 0;
+		autoon_count1 = 0;
 		autooff_count = 0;
 	}
-	
-	// if(Machine_State.flag_machine_onoff == RESET && Set_Param.flag_auto_on == SET){
-	// 	if(flow_data >= AUTOON_FLOW){
-	// 		if(autoon_count++ >= 3){
-	// 			autoon_count = 0;
-	// 			xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
-	// 			xEventGroupClearBits(MachineStateEvent_Handle,Machine_Off_Event);
-	// 		}
-	// 	}
-	// 	else if(flow_data < AUTOON_FLOW)
-	// 		autoon_count = 0;
-	// }
-	// if(Machine_State.flag_machine_onoff == SET && Set_Param.flag_auto_off == SET){
-	// 	if(flow_data >= AUTOOFF_FLOW){
-	// 		if(autooff_count++ >= 3){
-	// 			autooff_count = 0;
-	// 			xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
-	// 		}
-	// 	}
-	// 	else if(flow_data < AUTOOFF_FLOW)
-	// 		autooff_count = 0;
-	// }
 }
 
 

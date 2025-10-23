@@ -129,9 +129,10 @@ void App_MachineOn_SetParam(void){
 	Set_Param.mode = CPAP;
 	Set_Param.delaypress_min = 0;
 	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 2000;
-	Set_Param.epr = 5;
+	Set_Param.therapy_press  = 1000;
+	Set_Param.epr = 2;
 	Set_Param.flag_auto_off = SET;
+	Set_Param.flag_auto_on = SET;
 
 	/*--------------------------------------------*/
 	Run_Param.now_run_p = Set_Param.start_press;
