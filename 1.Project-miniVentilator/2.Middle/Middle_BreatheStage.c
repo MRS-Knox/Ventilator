@@ -58,15 +58,15 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_S
 		}
 	}
 	if(flag_node_ex == SET && mean > pmean5_buff[4]){
-		if(k < -30.0f){
-			if(ex_count1++ >= 5){
+		if(k < -20.0f){
+			if(ex_count1++ >= 3){
 				ex_count1 = 0;
 				flag_node_ex = RESET;
 				*pstage = Ex_Start;
 			}
 		}
 		else
-			ex_count1 = 0;
+			ex_count1 = ex_count1<=1 ? 0 : ex_count1-1;
 	}
 
 	if(*pstage == Ins_Start && k < 3.0f && pmean5_buff[4] > mean){

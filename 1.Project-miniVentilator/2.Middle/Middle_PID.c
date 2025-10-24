@@ -8,12 +8,12 @@
 #define D_PRESS_IN			0.10	//0.20
 
 #define P_PRESS_RE			1.9    	//1.5
-#define I_PRESS_RE			0.25
+#define I_PRESS_RE			0.25	//0.25
 #define D_PRESS_RE			0.20 	//0.3
 
 #define P_PRESS_KEEP		1.0		//1.0
-#define I_PRESS_KEEP		0.1     //0.1
-#define D_PRESS_KEEP		0.01	//0.1
+#define I_PRESS_KEEP		0.12    //0.1
+#define D_PRESS_KEEP		0.5		//0.01
 
 /*!
 	@brief 		 Increase PID algorithm intial parameter function. 

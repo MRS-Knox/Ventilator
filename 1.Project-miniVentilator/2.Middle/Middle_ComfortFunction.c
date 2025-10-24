@@ -55,10 +55,10 @@ uint16_t Mid_DelayIncreasePRESS(FlagStatus flag_delay,uint16_t real_time,uint8_t
 */
 void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
 	static uint8_t flag_uppress = 0;
-	uint8_t ins_up_press = 80;
-	uint8_t up_step = 10;
-	uint8_t down_step = 10;
-	uint16_t epr_press = set_press - (Set_Param.epr*50);
+	uint8_t ins_up_press = 150;
+	uint8_t up_step = 15;
+	uint8_t down_step = 5;
+	uint16_t epr_press = set_press - (Set_Param.epr * 50 + (Set_Param.epr / 5 * 50));
 	uint16_t return_press = 0;
 			
 	if(now_stage == None || now_stage == Error){
@@ -67,11 +67,11 @@ void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
 	}
 	else if(now_stage == Ins_Start || now_stage == Ins_End){
 		if(flag_uppress == 0){
-			if(*prun_press < set_press+ins_up_press)
+			if(*prun_press < (set_press+ins_up_press))
 				return_press = *prun_press + up_step;
 			else{
 				flag_uppress = 1;
-				return_press = set_press+ins_up_press;
+				return_press = set_press + ins_up_press;
 			}
 		}
 		else if(flag_uppress == 1){
@@ -124,7 +124,7 @@ void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
 		autoon_count = 0;
 		autoon_count1 = 0;
 		if(flow_data >= AUTOOFF_FLOW){
-			if(autooff_count++ >= 250){	//5s
+			if(autooff_count++ >= 200){	//4s
 				autooff_count = 0;
 				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
 				xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
@@ -141,10 +141,10 @@ void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
 			flag_max_time = 0;
 		}
 		else if(flow_data < AUTOON_MINFLOW && flag_max == SET){
-			if(autoon_count++ >= 10){
+			if(autoon_count++ >= 5){
 				autoon_count = 0;
 				flag_max = RESET;
-				if((++autoon_count1) >= 3){
+				if((++autoon_count1) >= 2){
 					autoon_count1 = 0;
 					xEventGroupClearBits(MachineStateEvent_Handle,Machine_Off_Event);
 					xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
