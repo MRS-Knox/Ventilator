@@ -162,9 +162,6 @@ void PowerOn_ValueInit(void){
 		
 	/* ------ Read data from flash. ------ */
 	Mid_ReadCALData_Power();
-	
-	Set_Param.flag_auto_off = SET;
-	Set_Param.flag_auto_on = SET;
 }
 
 /* Delete all tasks when the power on check is over!!! */

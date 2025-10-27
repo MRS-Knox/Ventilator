@@ -17,7 +17,7 @@ unsigned short int Average_Filter_Int(unsigned short int* pdata,unsigned char co
 /* Kalman filter. */
 float Kalman_Filter(KalmanFilter_t* pstruct,float measure_data);
 /* Low frequency pass filter. */
-float LowPass_Filter(float k,float measure_data,float last_value);
+int LowPass_Filter(float k,int measure_data,int last_value);
 /* Average filter(Flow). */
 int FlowAverage_Filter(int* pdata,unsigned int count);
 

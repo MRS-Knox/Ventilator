@@ -10,6 +10,7 @@
 	@retval		 none
 */
 void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_Stage *pstage){
+	static eBreathe_Stage last_stage = None;
 	static FlagStatus flag_node_ins = RESET;
 	static FlagStatus flag_node_ex 	= RESET;
 	static int last_mean = 0;
@@ -17,8 +18,9 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_S
 	static uint8_t ins_count2 = 0;
 	static uint8_t ex_count1 = 0;
 	static uint8_t ex_count2 = 0;
+	static uint8_t err_count = 0;
 //	static eBreathe_Stage last_stage = None;
-	float k = (pmean5_buff[4] - pmean5_buff[0]) / 5.0f;
+	float k = (pmean5_buff[4] - pmean5_buff[2]) / 5.0f; //Decrease k.
 	/* Machine is just starting. */
 	if(*pstage == None){
 		flag_node_ins = RESET;
@@ -58,7 +60,7 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_S
 		}
 	}
 	if(flag_node_ex == SET && mean > pmean5_buff[4]){
-		if(k < -20.0f){
+		if(k < -10.0f){
 			if(ex_count1++ >= 3){
 				ex_count1 = 0;
 				flag_node_ex = RESET;
@@ -99,6 +101,16 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_S
 		flag_node_ins = RESET;
 		*pstage = Error;
 	}
+	if(*pstage == last_stage){
+		if(err_count++ >= (5000/20)){	//5s
+			err_count = 0;
+			*pstage = Error;
+		}	
+	}
+	else
+		err_count = 0;
+
+	last_stage = *pstage;
 }
 
 

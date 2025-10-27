@@ -213,10 +213,9 @@ void TIM6_DAC_IRQHandler(){
                 }
             }
         }
-        /* ----------------- Update BPM ------------------- */
+        /* ----------------- Update the monitor parameters. ------------------- */
 		if(Machine_State.flag_machine_onoff == SET)
-			Mid_Update_PARAM_AboutBPM(Run_Param.breathe_stage);
-
+			Mid_Update_MonitorPARAM(Run_Param.breathe_stage);
 	}	
 }
 

@@ -155,8 +155,9 @@ float Kalman_Filter(KalmanFilter_t* pstruct,float measure_data){
 	@param[out]	 none
 	@retval		 output:optimal value 
 */
-float LowPass_Filter(float k,float measure_data,float last_value){
-	float output = k * (measure_data - last_value) + last_value;
+int LowPass_Filter(float k,int measure_data,int last_value){
+	int output = (int)(k * (float)(measure_data - last_value) + (float)last_value);
+
 	return output;
 }
 

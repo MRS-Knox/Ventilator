@@ -4,6 +4,8 @@
 #include "Use_Enum.h"
 #include "stm32f4xx_conf.h"
 
+#define PI 		3.14592654
+
 #define MAXFLOWBUFF_COUNT				200		//4s -- 200 points(f = 50hz).
 #define MACHINE_MINPRESS 				200		//2cmH2O	
 #define MACHINE_MAXPRESS 				2500	//25cmH2O	
@@ -27,14 +29,14 @@ typedef struct{
 /* Machine runs parameters struct. */
 typedef struct{	
 	int diff_press;
-	int flow_data;  					//0.01 lpm	
+	int flow_data;  					//1lpm * 100	
 	long int flow_sum;
 	int flow_mean;
 	int flow_mean_5[5];
 	int max_flow;
 	int min_flow;
 
-	short measure_p; 					//0.01 cmH2O
+	short measure_p; 					//1cmH2O * 100
 	unsigned short now_set_p;
 	unsigned short now_run_p;
 	unsigned short delay_end_p;
@@ -46,7 +48,10 @@ typedef struct{
 	unsigned short ins_time;			//1ms
 	unsigned short ex_time;				//1ms
 	unsigned char  ins_ex_scale[2];		//Inspiration : Expiration.Remain one decimal:0.1 -> 10.
-	unsigned short bpm;					//Remain one decimal:0.1 -> 10.
+	unsigned short bpm;					//Remain one decimal:0.1 -> 1. 1bpm * 10
+	int leak_mean;						//1lpm * 100		
+	unsigned int ins_vt;				//1ml * 100
+	unsigned int mv;					//1lpm * 100
 
 	eBreathe_Stage breathe_stage;
 }Run_Param_t;
@@ -111,6 +116,9 @@ typedef struct{
 	FlagStatus flag_voicealarm_first;
 	FlagStatus flag_judgeins_ex;
 	FlagStatus flag_ajust_mask;
+	
+	FlagStatus flag_update_bpm;
+	FlagStatus flag_update_vt;
 
 	FlagStatus flag_set_airfilter;		
 	FlagStatus flag_set_mask;				

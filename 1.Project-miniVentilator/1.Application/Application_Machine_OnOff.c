@@ -7,6 +7,9 @@
 	@retval		 none
 */
 unsigned char machine_onoff_time = 0;
+int flow_buff1[3000];
+eBreathe_Stage stage1[3000];
+uint16_t flow_buff1_count = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
@@ -53,8 +56,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 						run_stage = Machine_DelayIP;
 					else
 						run_stage = Machine_NoDelayIP;
-				}
-					
+				}	
 				break;				
 			case Machine_DelayIP:
 				Run_Param.now_set_p = Mid_DelayIncreasePRESS(Machine_State.flag_delaypress,
@@ -110,8 +112,13 @@ void App_Machine_OnOff_Task(void *pvParameter){
 		else{
 			flow_buff_count = 0;
 			flag_machine_start = SET;
-		}
+		}		
 		Mid_AutoOn_AutoOff(Run_Param.flow_data,machine_event);
+			
+		stage1[flow_buff1_count] = Run_Param.breathe_stage;
+		flow_buff1[flow_buff1_count++] = Run_Param.flow_data;
+		if(flow_buff1_count >= 3000)
+			flow_buff1_count = 0;
 		
 		xQueueOverwrite(RunParamQueue_Handle,&Run_Param);
 		vTaskDelay(pdMS_TO_TICKS(20));
@@ -184,6 +191,8 @@ void App_MachineOff_ClearParam(void){
 	Run_Param.flow_sum			= 0;
 	Run_Param.max_flow			= 0;
 	Run_Param.min_flow			= 0;
+	Run_Param.leak_mean			= 0;
+	Run_Param.ins_vt			= 0;
 }
 
 
