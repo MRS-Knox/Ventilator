@@ -103,7 +103,7 @@ void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
 */
 #define AUTOON_MAXFLOW		500	
 #define AUTOON_MINFLOW		-400
-#define AUTOOFF_FLOW		10000
+#define AUTOOFF_FLOW		9000
 void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit){
 	static FlagStatus flag_max = RESET;
 	static uint8_t autoon_count = 0;

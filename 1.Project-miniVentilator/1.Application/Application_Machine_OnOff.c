@@ -7,9 +7,9 @@
 	@retval		 none
 */
 unsigned char machine_onoff_time = 0;
-int flow_buff1[3000];
-eBreathe_Stage stage1[3000];
-uint16_t flow_buff1_count = 0;
+//int flow_buff1[3000];
+//eBreathe_Stage stage1[3000];
+//uint16_t flow_buff1_count = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
@@ -114,11 +114,11 @@ void App_Machine_OnOff_Task(void *pvParameter){
 			flag_machine_start = SET;
 		}		
 		Mid_AutoOn_AutoOff(Run_Param.flow_data,machine_event);
-			
-		stage1[flow_buff1_count] = Run_Param.breathe_stage;
-		flow_buff1[flow_buff1_count++] = Run_Param.flow_data;
-		if(flow_buff1_count >= 3000)
-			flow_buff1_count = 0;
+		
+//		stage1[flow_buff1_count] = Run_Param.breathe_stage;
+//		flow_buff1[flow_buff1_count++] = Run_Param.flow_data;
+//		if(flow_buff1_count >= 3000)
+//			flow_buff1_count = 0;
 		
 		xQueueOverwrite(RunParamQueue_Handle,&Run_Param);
 		vTaskDelay(pdMS_TO_TICKS(20));

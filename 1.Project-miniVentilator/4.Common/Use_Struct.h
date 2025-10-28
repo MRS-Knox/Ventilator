@@ -49,8 +49,9 @@ typedef struct{
 	unsigned short ex_time;				//1ms
 	unsigned char  ins_ex_scale[2];		//Inspiration : Expiration.Remain one decimal:0.1 -> 10.
 	unsigned short bpm;					//Remain one decimal:0.1 -> 1. 1bpm * 10
-	int leak_mean;						//1lpm * 100		
+	int leak_mean;						//1lpm * 100	
 	unsigned int ins_vt;				//1ml * 100
+	unsigned int ex_vt;					//1ml * 100
 	unsigned int mv;					//1lpm * 100
 
 	eBreathe_Stage breathe_stage;
