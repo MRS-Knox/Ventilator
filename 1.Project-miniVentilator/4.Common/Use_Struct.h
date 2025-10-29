@@ -32,7 +32,6 @@ typedef struct{
 	int flow_data;  					//1lpm * 100	
 	long int flow_sum;
 	int flow_mean;
-	int flow_mean_5[5];
 	int max_flow;
 	int min_flow;
 
@@ -55,6 +54,7 @@ typedef struct{
 	unsigned int mv;					//1lpm * 100
 
 	eBreathe_Stage breathe_stage;
+	int std;
 }Run_Param_t;
 
 /* Machine sets parameters struct. */
@@ -151,7 +151,7 @@ typedef struct{
 
 /* Calibrate pressure and flow struct. */
 #define CALFlowMaxCount 	7
-#define CALFlow_KMaxCount 	6
+#define CALFlow_KMaxCount 	7
 #define CALPRESSMaxCount 	6
 typedef struct{
 	unsigned short calpress_buff[CALPRESSMaxCount]; //5 10 15 20 25 30
@@ -159,7 +159,7 @@ typedef struct{
 	unsigned char  calpress_count;
 
 	unsigned short k[CALFlow_KMaxCount];    		//k*100. < 65535. 		
-	unsigned int  calflow_buff[CALFlowMaxCount];	//difference pressure*100. 0 40 60 80 100 120 140
+	unsigned int  calflow_buff[CALFlowMaxCount];	//difference pressure*100. 20 40 60 80 100 120 140
 	unsigned char calflow_count;
 
 	unsigned short flag_rtc_init;					//RTC intialization.

@@ -91,7 +91,6 @@ void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage){
 		return_press = epr_press;
 		return_press = return_press<MACHINE_MINPRESS ? MACHINE_MINPRESS : return_press;
 	}
-
 	*prun_press = return_press;
 }
 

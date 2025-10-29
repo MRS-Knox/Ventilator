@@ -127,32 +127,36 @@ void Mid_CalibratePRESS(uint32_t rpm){
 	@retval		 none
 */
 void Mid_CALCoefficient(){
-	uint16_t flow_buff[CALFlowMaxCount] = {0,4000,6000,8000,10000,12000,14000};
+	uint16_t flow_buff[CALFlowMaxCount] = {2000,4000,6000,8000,10000,12000,14000};
 	float middle_data = 0.0f;
 	uint8_t count = 0;
 	
-	/* [0,40) */
-	middle_data = flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1]);
+	/* [0,20) */
+	middle_data = flow_buff[count]/sqrt(CalibrationData.calflow_buff[count]);
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
-	count++;	
+	count++;
+	/* [20,40) */
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
+	CalibrationData.k[count] = (uint16_t)(middle_data*100);
+	count++;
 	/* [40,60) */
-	middle_data = ((flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])) + (flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1])))/2;
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
 	count++;
 	/* [60,80) */
-	middle_data = ((flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])) + (flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1])))/2;
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
 	count++;
 	/* [80,100) */
-	middle_data = ((flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])) + (flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1])))/2;
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
 	count++;
 	/* [100,120) */
-	middle_data = ((flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])) + (flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1])))/2;
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
 	count++;
 	/* [120,140) */
-	middle_data = ((flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])) + (flow_buff[count+1]/sqrt(CalibrationData.calflow_buff[count+1])))/2;
+	middle_data = ((flow_buff[count-1]/sqrt(CalibrationData.calflow_buff[count-1])) + (flow_buff[count]/sqrt(CalibrationData.calflow_buff[count])))/2;
 	CalibrationData.k[count] = (uint16_t)(middle_data*100);
 	count++;
 }

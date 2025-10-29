@@ -93,6 +93,8 @@ void Mid_SDP31_ReadData(uint16_t *scale_factor,uint8_t *sdp31_value){
 	@retval		 ErrorStatus:CRC whether right
 */
 ErrorStatus Mid_SDP31Data_Process(int *pdiffdata){
+	static int diff_buff[5];
+	static uint8_t diff_buff_count = 0;
 	static uint8_t flag_sdp3xcmd = 0;
 	uint16_t minus_value = 0;
 	uint8_t sdp31_data[6];
@@ -113,7 +115,13 @@ ErrorStatus Mid_SDP31Data_Process(int *pdiffdata){
 			diffdata = (float)((sdp31_data[0]<<8) + sdp31_data[1])/scale;
 		
 		diffdata = Kalman_Filter(&Flow_Kalman,diffdata);
-		*pdiffdata = (int)(-diffdata*100);
+		if(diff_buff_count++ >= 5){
+			diff_buff_count = 5;
+			*pdiffdata = FlowAverage_Filter(diff_buff,5);
+		}
+		MoveRight_Range(diff_buff,5,(int)(diffdata*100.0f));
+		
+		*pdiffdata = -*pdiffdata;
 		return SUCCESS;		
 	}
 	return ERROR;
@@ -135,32 +143,73 @@ int Mid_CalculateFlow(int now_flow){
 		else
 			diff_p = Run_Param.diff_press;
 
-		/* [0,40) */
-		if(diff_p <= CalibrationData.calflow_buff[1])
+		/* [0,20) */
+		if(diff_p <= CalibrationData.calflow_buff[0])
 			measure_flow = (int)(((float)CalibrationData.k[0]/100.0f) * sqrt(diff_p));
+		/* [20,40) */
+		else if(diff_p <= CalibrationData.calflow_buff[1])
+			measure_flow = (int)(((float)CalibrationData.k[1]/100.0f) * sqrt(diff_p));
 		/* [40,60) */
 		else if(diff_p <= CalibrationData.calflow_buff[2])
-			measure_flow = (int)(((float)CalibrationData.k[1]/100.0f) * sqrt(diff_p));
+			measure_flow = (int)(((float)CalibrationData.k[2]/100.0f) * sqrt(diff_p));
 		/* [60,80) */
 		else if(diff_p <= CalibrationData.calflow_buff[3])
-			measure_flow = (int)(((float)CalibrationData.k[2]/100.0f) * sqrt(diff_p));
+			measure_flow = (int)(((float)CalibrationData.k[3]/100.0f) * sqrt(diff_p));
 		/* [80,100) */
 		else if(diff_p <= CalibrationData.calflow_buff[4])
-			measure_flow = (int)(((float)CalibrationData.k[3]/100.0f) * sqrt(diff_p));
+			measure_flow = (int)(((float)CalibrationData.k[4]/100.0f) * sqrt(diff_p));
 		/* [100,120) */
 		else if(diff_p <= CalibrationData.calflow_buff[5])
-			measure_flow = (int)(((float)CalibrationData.k[4]/100.0f) * sqrt(diff_p));
+			measure_flow = (int)(((float)CalibrationData.k[5]/100.0f) * sqrt(diff_p));
 		/* >=120 */
 		else if(diff_p > CalibrationData.calflow_buff[5])
-			measure_flow = (int)(((float)CalibrationData.k[5]/100.0f) * sqrt(diff_p));
+			measure_flow = (int)(((float)CalibrationData.k[6]/100.0f) * sqrt(diff_p));
 
 		if(Run_Param.diff_press < 0 &&  measure_flow > 0)
 			measure_flow = -measure_flow;
 	}
 	else
 		measure_flow = now_flow;
+		
 	return measure_flow;
 }
+
+// int Mid_CalculateFlow(int now_flow){
+// 	uint32_t diff_p = 0;
+// 	int measure_flow = 0;
+
+// 	if(Mid_SDP31Data_Process(&Run_Param.diff_press) == SUCCESS){
+// 		if(Run_Param.diff_press < 0.0f)
+// 			diff_p = -Run_Param.diff_press;
+// 		else
+// 			diff_p = Run_Param.diff_press;
+
+// 		/* [0,40) */
+// 		if(diff_p <= CalibrationData.calflow_buff[1])
+// 			measure_flow = (int)(((float)CalibrationData.k[0]/100.0f) * sqrt(diff_p));
+// 		/* [40,60) */
+// 		else if(diff_p <= CalibrationData.calflow_buff[2])
+// 			measure_flow = (int)(((float)CalibrationData.k[1]/100.0f) * sqrt(diff_p));
+// 		/* [60,80) */
+// 		else if(diff_p <= CalibrationData.calflow_buff[3])
+// 			measure_flow = (int)(((float)CalibrationData.k[2]/100.0f) * sqrt(diff_p));
+// 		/* [80,100) */
+// 		else if(diff_p <= CalibrationData.calflow_buff[4])
+// 			measure_flow = (int)(((float)CalibrationData.k[3]/100.0f) * sqrt(diff_p));
+// 		/* [100,120) */
+// 		else if(diff_p <= CalibrationData.calflow_buff[5])
+// 			measure_flow = (int)(((float)CalibrationData.k[4]/100.0f) * sqrt(diff_p));
+// 		/* >=120 */
+// 		else if(diff_p > CalibrationData.calflow_buff[5])
+// 			measure_flow = (int)(((float)CalibrationData.k[5]/100.0f) * sqrt(diff_p));
+
+// 		if(Run_Param.diff_press < 0 &&  measure_flow > 0)
+// 			measure_flow = -measure_flow;
+// 	}
+// 	else
+// 		measure_flow = now_flow;
+// 	return measure_flow;
+// }
 
 
 

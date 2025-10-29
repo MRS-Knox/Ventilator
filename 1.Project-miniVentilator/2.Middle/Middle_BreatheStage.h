@@ -11,6 +11,6 @@
 #include "Middle_CalculateParameter.h"
 
 /* Judge the breathe stage. */
-void Mid_Judge_BreatheStage(int *pflow_buff,int mean,int *pmean5_buff,eBreathe_Stage *pstage);
+void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage);
 
 #endif

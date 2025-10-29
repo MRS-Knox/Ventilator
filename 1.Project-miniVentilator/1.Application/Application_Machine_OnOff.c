@@ -15,7 +15,6 @@ void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_machine_start = RESET;
 	int flow_buff[MAXFLOWBUFF_COUNT];
 	uint16_t flow_buff_count = 0;
-	int flow_mean5 = 0;
 	EventBits_t machine_event = 0x00;
 	eMachine_RunStage run_stage = Machine_Stop; 
 	while(1){
@@ -89,10 +88,6 @@ void App_Machine_OnOff_Task(void *pvParameter){
 			if(flag_machine_start == SET){
 				flow_buff[flow_buff_count++] = Run_Param.flow_data;
 				Run_Param.flow_sum += Run_Param.flow_data;
-				if(flow_buff_count >= MAXFLOWBUFF_COUNT-4){
-					flow_mean5 = FlowAverage_Filter(&flow_buff[flow_buff_count-5],5);
-					MoveRight_Range(Run_Param.flow_mean_5,5,flow_mean5);
-				}
 				if(flow_buff_count >= MAXFLOWBUFF_COUNT){
 					flow_buff_count = 0;
 					flag_machine_start = RESET;
@@ -103,9 +98,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 				Run_Param.flow_sum = (Run_Param.flow_sum-flow_buff[0])+Run_Param.flow_data;
 				Run_Param.flow_mean = Run_Param.flow_sum / MAXFLOWBUFF_COUNT;
 				MoveRight_Range(flow_buff,MAXFLOWBUFF_COUNT,Run_Param.flow_data);
-				flow_mean5 = FlowAverage_Filter(&flow_buff[MAXFLOWBUFF_COUNT-5],5);
-				MoveRight_Range(Run_Param.flow_mean_5,5,flow_mean5);
-				Mid_Judge_BreatheStage(flow_buff,Run_Param.flow_mean,Run_Param.flow_mean_5,&Run_Param.breathe_stage);
+				Mid_Judge_BreatheStage(flow_buff,Run_Param.flow_mean,&Run_Param.breathe_stage);
 				Mid_EPR(&Run_Param.now_run_p,Run_Param.now_set_p,Run_Param.breathe_stage);
 			}
 		}
@@ -136,7 +129,7 @@ void App_MachineOn_SetParam(void){
 	Set_Param.mode = CPAP;
 	Set_Param.delaypress_min = 0;
 	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 1000;
+	Set_Param.therapy_press  = 400;
 	Set_Param.epr = 0;
 
 	/*--------------------------------------------*/
@@ -193,6 +186,13 @@ void App_MachineOff_ClearParam(void){
 	Run_Param.min_flow			= 0;
 	Run_Param.leak_mean			= 0;
 	Run_Param.ins_vt			= 0;
+	Run_Param.ex_vt				= 0;
+	Run_Param.mv				= 0;
+	Run_Param.ins_time			= 0;
+	Run_Param.ex_time			= 0;
+	Run_Param.ins_ex_scale[0]	= 0;
+	Run_Param.ins_ex_scale[1]	= 0;
+	Run_Param.bpm				= 0;
 }
 
 
