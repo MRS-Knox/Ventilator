@@ -11,7 +11,7 @@ uint16_t Mid_DelayIncreasePRESS(FlagStatus flag_delay,uint16_t real_time,uint8_t
 /* Auto open machine and auto close machine. */
 void Mid_AutoOn_AutoOff(int flow_data,EventBits_t event_bit);
 /* Release pressure when the breathing stage is expiration. */
-void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage);
+void Mid_EPR(uint16_t *prun_press,uint16_t set_press,eBreathe_Stage now_stage,uint8_t breathe_count,FlagStatus flag_inssupport);
 
 
 #endif

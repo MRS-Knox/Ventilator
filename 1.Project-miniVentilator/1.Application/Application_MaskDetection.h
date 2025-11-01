@@ -6,6 +6,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "event_groups.h"
+#include "Middle_BreatheStage.h"
+#include "Middle_ComfortFunction.h"
+#include "Middle_CalculateParameter.h"
+
 
 /* Mask detection. */
 void App_MaskDetection_Task(void *pvPatameter);

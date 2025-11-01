@@ -57,26 +57,13 @@
   * @retval  None
   */
 void EXTI1_IRQHandler(void){
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	
 	if(EXTI_GetITStatus(EXTI_Line1) != RESET){
 		EXTI_ClearITPendingBit(EXTI_Line1);
-		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == RESET && Machine_State.flag_machine_switch == RESET){
-			Machine_State.flag_machine_switch = SET;
-		}
-		else if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == SET && Machine_State.flag_machine_switch == SET){
-			Machine_State.flag_machine_switch = RESET;
-			if(Machine_State.flag_machine_onoff == RESET){
-				Machine_State.flag_machine_onoff = SET;
-                xEventGroupClearBitsFromISR(MachineStateEvent_Handle,Machine_Off_Event);
-				xEventGroupSetBitsFromISR(MachineStateEvent_Handle,Machine_On_Event,&xHigherPriorityTaskWoken);
-			}
-			else if(Machine_State.flag_machine_onoff == SET){
-				Machine_State.flag_machine_onoff = RESET;
-                xEventGroupClearBitsFromISR(MachineStateEvent_Handle,Machine_On_Event);
-				xEventGroupSetBitsFromISR(MachineStateEvent_Handle,Machine_Off_Event,&xHigherPriorityTaskWoken);
-			}
-		}
+		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == RESET && Machine_State.flag_machine_switch == 0)
+			Machine_State.flag_machine_switch = 1;
+		else if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1) == SET && Machine_State.flag_machine_switch == 1)
+			Machine_State.flag_machine_switch = 2;
 	}
 }
 
@@ -86,7 +73,7 @@ void EXTI1_IRQHandler(void){
   * @retval  None
   */
 void EXTI9_5_IRQHandler(void){
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+	
 	if(EXTI_GetITStatus(EXTI_Line9) != RESET){
 		EXTI_ClearITPendingBit(EXTI_Line9);
 		if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9) == RESET && Machine_State.flag_bluetooth_switch == RESET){
@@ -95,24 +82,23 @@ void EXTI9_5_IRQHandler(void){
 		else if(GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_9) == SET && Machine_State.flag_bluetooth_switch == SET){
 			Machine_State.flag_bluetooth_switch = RESET;
 
-            if(Machine_Time.push_btkey_time_10ms >= 500){   //5s
-                Machine_Time.push_btkey_time_10ms = 0;
-                if(Machine_State.flag_bluetooth_onoff == RESET){
-                    Machine_State.flag_bluetooth_onoff = SET;
-                    xEventGroupSetBitsFromISR(MachineStateEvent_Handle,BlueTooth_On_Event,&xHigherPriorityTaskWoken);
-                }
-                else if(Machine_State.flag_bluetooth_onoff == SET){
-                    Machine_State.flag_bluetooth_onoff = RESET;
-                    xEventGroupSetBitsFromISR(MachineStateEvent_Handle,BlueTooth_Off_Event,&xHigherPriorityTaskWoken);
-                }
-            }
-            else{
-                Machine_Time.push_btkey_time_10ms = 0;
-                // if(Machine_State.flag_alarmvoice_state == SET){
-                //     Machine_State.flag_alarmvoice_state == RESET;
-                //     xEventGroupSetBitsFromISR(MachineStateEvent_Handle,AlarmState_Off_Event,&xHigherPriorityTaskWoken);
-                // }
-            } 
+            // if(Machine_Time.push_btkey_time_10ms >= 500){   //5s
+            //     Machine_Time.push_btkey_time_10ms = 0;
+            //     if(Machine_State.flag_bluetooth_onoff == RESET){
+            //         Machine_State.flag_bluetooth_onoff = SET;
+            //         xEventGroupSetBitsFromISR(MachineStateEvent_Handle,BlueTooth_On_Event,&xHigherPriorityTaskWoken);
+            //     }
+            //     else if(Machine_State.flag_bluetooth_onoff == SET){
+            //         Machine_State.flag_bluetooth_onoff = RESET;
+            //     }
+            // }
+            // else{
+            //     Machine_Time.push_btkey_time_10ms = 0;
+            //     // if(Machine_State.flag_alarmvoice_state == SET){
+            //     //     Machine_State.flag_alarmvoice_state == RESET;
+            //     //     xEventGroupSetBitsFromISR(MachineStateEvent_Handle,AlarmState_Off_Event,&xHigherPriorityTaskWoken);
+            //     // }
+            // } 
 		}
 	}
 }
@@ -214,7 +200,7 @@ void TIM6_DAC_IRQHandler(){
             }
         }
         /* ----------------- Update the monitor parameters. ------------------- */
-		if(Machine_State.flag_machine_onoff == SET)
+		if(Machine_State.flag_machine_onoff == SET || Machine_State.flag_testmask_onoff == SET)
 			Mid_Update_MonitorPARAM(Run_Param.breathe_stage);
 	}	
 }

@@ -83,7 +83,10 @@ void Mid_IncreasePID(uint16_t target_press,uint16_t measure_press){
 	IncreasePID.total_output   = IncreasePID.present_output + IncreasePID.last_output;
 	
 	/* Limit output rpm. */	
-	IncreasePID.total_output = IncreasePID.total_output >= MOTOR_SPEED_MAX ? MOTOR_SPEED_MAX : IncreasePID.total_output;
+	if(IncreasePID.total_output >= CalibrationData.calpress_buff[1] && measure_press < 800)
+		IncreasePID.total_output = IncreasePID.total_output >= 35000 ? 35000 : IncreasePID.total_output;
+	else
+		IncreasePID.total_output = IncreasePID.total_output >= MOTOR_SPEED_MAX ? MOTOR_SPEED_MAX : IncreasePID.total_output;
 	IncreasePID.total_output = IncreasePID.total_output <= MOTOR_SPEED_MIN ? MOTOR_SPEED_MIN : IncreasePID.total_output;
 	Mid_SendToBlower(SEND_RPM,IncreasePID.total_output);
 	

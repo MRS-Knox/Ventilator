@@ -5,12 +5,12 @@ TaskHandle_t 							RECMotorTaskHandle			= NULL;
 TaskHandle_t 					        CONBlowerTaskHandle		    = NULL;
 TaskHandle_t 							MachineOnOffTaskHandle 	    = NULL;
 TaskHandle_t 							MeasureTaskHandle			= NULL;
+TaskHandle_t        					TestMaskTaskHandle          = NULL;
 // TaskHandle_t 							RGBTaskHandle				= NULL;
 // TaskHandle_t 							WCALDataTaskHandle			= NULL;
 TaskHandle_t 							CALDataTaskHandle			= NULL;
 // TaskHandle_t 					        JudgeInsExTaskHandle        = NULL;
 // TaskHandle_t 					        AlarmTaskHandle             = NULL;
-// TaskHandle_t        					TestMaskTaskHandle          = NULL;
 
 /* -----------------Queue----------------- */
 QueueHandle_t                           BlowerStateQueue_Handle     = NULL;

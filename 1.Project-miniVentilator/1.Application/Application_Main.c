@@ -101,12 +101,7 @@ int main(void){
 	/* ----------------- Create Event Group. ----------------- */	
 	MachineStateEvent_Handle = xEventGroupCreate();
 	FeedDogEvent_Handle = xEventGroupCreate();
-
-	xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
-	xEventGroupSetBits(MachineStateEvent_Handle,TestMask_Stop_Event);
-	xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStop_Event);
-	xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStopBlower_Event);
-
+	
 	/* ----------------- Create Task. ----------------- */	
 	xTaskCreate(Hardware_Init,"Hardware_Init",100,NULL,11,NULL);		 		
 	
@@ -163,6 +158,12 @@ void PowerOn_ValueInit(void){
 	/* ------ Read data from flash. ------ */
 	Mid_ReadCALData_Power();
 	
+	/* Delete!!! */
+	Set_Param.mode = CPAP;
+	Set_Param.delaypress_min = 0;
+	Set_Param.start_press    = 500;
+	Set_Param.therapy_press  = 600;
+	Set_Param.epr = 5;
 	Set_Param.flag_auto_on = SET;
 	Set_Param.flag_auto_off = SET;
 }
@@ -194,12 +195,12 @@ void PowerOnCheck_Task(void *pvParameter){
 /* Create all tasks. */
 void CreateTask_Task(void *pvParameter){
 	Mid_Feed_IWDG();
-	xTaskCreate(App_ReceiveBlower_Task	,	//Function name.
-				"App_ReceiveBlower_Task",   //Task name.	
-				RECMotorTask_DERTH	,       //Task depth.
-				NULL				,       //Task parameter.
-				RECMotorTask_Priority,      //Task priority.
-				&RECMotorTaskHandle);       //Task handle.
+	xTaskCreate(App_ReceiveBlower_Task,	
+				"App_ReceiveBlower_Task",   
+				RECMotorTask_DERTH,       
+				NULL,       
+				RECMotorTask_Priority,      
+				&RECMotorTaskHandle);      
 	
 	xTaskCreate(App_ControlBlower_Task,		
 				"App_ControlBlower_Task",   	
@@ -222,13 +223,13 @@ void CreateTask_Task(void *pvParameter){
 				MachineOnOffTask_Priority,    
 				&MachineOnOffTaskHandle);     
 
+	xTaskCreate(App_MaskDetection_Task,		
+				"App_MaskDetection_Task",   	
+				TestMaskTask_DERTH,   	
+				NULL,      
+				TestMaskTask_Priority,    	
+				&TestMaskTaskHandle);     	
 
-	// xTaskCreate(Mid_TestMask		,		//Function name.
-	// 			"Mid_TestMask"		,   	//Task name.	
-	// 			TestMaskTask_DERTH	,   	//Task depth.
-	// 			NULL				,       //Task parameter.
-	// 			TestMaskTask_Priority,    	//Task priority.
-	// 			&TestMaskTaskHandle);     	//Task handle.
 	// xTaskCreate(Mid_CalculateFlow	,		//Function name.
 	// 			"Mid_CalculateFlow"	,       //Task name.	
 	// 			FlowTask_DERTH		,       //Task depth.
@@ -250,12 +251,12 @@ void CreateTask_Task(void *pvParameter){
 	// 			WCALDataTask_Priority,      //Task priority.
 	// 			&WCALDataTaskHandle);   	//Task handle.
 
-	// // xTaskCreate(Mid_JudgeInsEx		,		//Function name.
-	// //  			"Mid_JudgeInsEx"	,  		//Task name.	
-	// //  			JudgeInsExTask_DERTH,       //Task depth.
-	// //  			NULL				,       //Task parameter.
-	// //  			JudgeInsExTask_Priority,    //Task priority.
-	// //  			&JudgeInsExTaskHandle);   	//Task handle.		
+	// xTaskCreate(Mid_JudgeInsEx		,		//Function name.
+	//  			"Mid_JudgeInsEx"	,  		//Task name.	
+	//  			JudgeInsExTask_DERTH,       //Task depth.
+	//  			NULL				,       //Task parameter.
+	//  			JudgeInsExTask_Priority,    //Task priority.
+	//  			&JudgeInsExTaskHandle);   	//Task handle.		
 	
 	// xTaskCreate(Mid_MachineAlarm	,		//Function name.
 	// 			"Mid_MachineAlarm"	,  		//Task name.	

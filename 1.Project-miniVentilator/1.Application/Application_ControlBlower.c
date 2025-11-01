@@ -13,35 +13,41 @@ void App_ControlBlower_Task(void *pvParameter){
 	Blower_State_t blower_data;
 	Run_Param_t run_param;
 	EventBits_t machine_event = 0x00;
-	EventBits_t lastmachine_event = 0x00;
 	eBlowerRunStage blowerstage = Blower_Stop;
 	while(1){
 		controlblower_time = controlblower_time>200 ? 0 : controlblower_time+1;
-		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_Off_Event,pdFALSE,pdFALSE,0);
-		/* Judge machine state. */
+		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_On_Event,pdFALSE,pdFALSE,0);
+
 		if(blowerstage == Blower_Stop){
-			if(((machine_event&Machine_On_Event) == Machine_On_Event) || ((machine_event&TestMask_Start_Event) == TestMask_Start_Event)
-				|| ((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event))
+			/* Open the blower when only one of the machine,the mask detection,and the calibration is on. */
+			if(((machine_event&Machine_On_Event) == Machine_On_Event) && ((machine_event&TestMask_Start_Event) != TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event))
+				blowerstage = Blower_Start;
+			else if(((machine_event&Machine_On_Event) != Machine_On_Event) && ((machine_event&TestMask_Start_Event) == TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event))
+				blowerstage = Blower_Start;
+			else if(((machine_event&Machine_On_Event) != Machine_On_Event) && ((machine_event&TestMask_Start_Event) != TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event))
 				blowerstage = Blower_Start;
 		}
 		else if(blowerstage != Blower_Stop){
-			if(((machine_event&Machine_Off_Event) == Machine_Off_Event) && ((machine_event&TestMask_Stop_Event) == TestMask_Stop_Event)
-				&& ((machine_event&CalibrateStopBlower_Event) == CalibrateStopBlower_Event))
+			/* Close the blower when the machine,the mask detection,and the calibration are all off. */
+			if(((machine_event&Machine_On_Event) != Machine_On_Event) && ((machine_event&TestMask_Start_Event) != TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event))
 				blowerstage = Blower_Stop;
-			if((machine_event&Machine_On_Event) == Machine_On_Event && (lastmachine_event&Machine_On_Event) != Machine_On_Event){
+			/* Close the blower when any two or all of the machine,the mask detection,and the calibration are on. */
+			else if(((machine_event&Machine_On_Event) == Machine_On_Event) && ((machine_event&TestMask_Start_Event) == TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event))
 				blowerstage = Blower_Stop;
-				xEventGroupClearBits(MachineStateEvent_Handle,TestMask_Start_Event|CalibrateStartBlower_Event);
-			}
-			if((machine_event&TestMask_Start_Event) == TestMask_Start_Event && (lastmachine_event&TestMask_Start_Event) != TestMask_Start_Event){
+			else if(((machine_event&Machine_On_Event) == Machine_On_Event) && ((machine_event&TestMask_Start_Event) != TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event))
 				blowerstage = Blower_Stop;
-				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event|CalibrateStartBlower_Event);
-				Machine_State.flag_machine_onoff = RESET;
-			}
-			if((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event && (lastmachine_event&CalibrateStartBlower_Event) != CalibrateStartBlower_Event){
+			else if(((machine_event&Machine_On_Event) != Machine_On_Event) && ((machine_event&TestMask_Start_Event) == TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event))
 				blowerstage = Blower_Stop;
-				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event|TestMask_Start_Event);
-				Machine_State.flag_machine_onoff = RESET;
-			}
+			else if(((machine_event&Machine_On_Event) == Machine_On_Event) && ((machine_event&TestMask_Start_Event) == TestMask_Start_Event)
+				&& ((machine_event&CalibrateStartBlower_Event) == CalibrateStartBlower_Event))
+				blowerstage = Blower_Stop;
 		}
 	
 		measure_press = Mid_CalculatePRESS();
@@ -76,12 +82,11 @@ void App_ControlBlower_Task(void *pvParameter){
 			default:break;
 		}
 
-		if(blowerstage == Blower_PIDRPM && (machine_event&Machine_On_Event) == Machine_On_Event)
+		if(blowerstage == Blower_PIDRPM)
 			xEventGroupSetBits(MachineStateEvent_Handle,MachineOn_PID_Event);
 		else
 			xEventGroupClearBits(MachineStateEvent_Handle,MachineOn_PID_Event);
 
-		lastmachine_event = machine_event;
 		vTaskDelay(pdMS_TO_TICKS(10));
 	}
 }

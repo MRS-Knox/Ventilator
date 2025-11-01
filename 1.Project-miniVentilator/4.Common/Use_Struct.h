@@ -44,6 +44,7 @@ typedef struct{
 	unsigned char  delayp_time; 		//The unit is minute.
 	unsigned char  delayp_remaintime;	//Remaining time for delay increase pressure.
 	
+	unsigned char breathe_count;
 	unsigned short ins_time;			//1ms
 	unsigned short ex_time;				//1ms
 	unsigned char  ins_ex_scale[2];		//Inspiration : Expiration.Remain one decimal:0.1 -> 10.
@@ -109,17 +110,14 @@ typedef struct{
 /* Machine state struct. */
 typedef struct{
 	FlagStatus flag_machine_onoff; 	
-	FlagStatus flag_machine_switch;	
-	FlagStatus flag_bluetooth_onoff;
+	uint8_t flag_machine_switch;
+	FlagStatus flag_testmask_onoff; 
+	FlagStatus flag_ajustmask; 
+	// FlagStatus flag_bluetooth_onoff;
 	FlagStatus flag_bluetooth_switch;
 	FlagStatus flag_alarmvoice_state;
 	FlagStatus flag_delaypress;	
 	FlagStatus flag_voicealarm_first;
-	FlagStatus flag_judgeins_ex;
-	FlagStatus flag_ajust_mask;
-	
-	FlagStatus flag_update_bpm;
-	FlagStatus flag_update_vt;
 
 	FlagStatus flag_set_airfilter;		
 	FlagStatus flag_set_mask;				

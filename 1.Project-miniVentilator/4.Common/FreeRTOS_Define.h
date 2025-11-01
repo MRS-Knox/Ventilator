@@ -19,21 +19,18 @@ extern  TaskHandle_t 					MachineOnOffTaskHandle;
 #define MachineOnOffTask_DERTH			1000	
 #define MachineOnOffTask_Priority		6
 
-// extern  TaskHandle_t 					JudgeInsExTaskHandle;
-// #define JudgeInsExTask_DERTH			100	
-// #define JudgeInsExTask_Priority			8
+extern  TaskHandle_t 					TestMaskTaskHandle;
+#define TestMaskTask_DERTH			    500	
+#define TestMaskTask_Priority			5
+
 
 // extern  TaskHandle_t 					AlarmTaskHandle;
 // #define AlarmTask_Depth                 100
 // #define AlarmTask_Priority			    8
 
-// extern  TaskHandle_t 					TestMaskTaskHandle;
-// #define TestMaskTask_DERTH			    100	
-// #define TestMaskTask_Priority			6
-
 extern  TaskHandle_t 					RECMotorTaskHandle;
 #define RECMotorTask_DERTH				100	
-#define RECMotorTask_Priority			6
+#define RECMotorTask_Priority			4
 
 // extern  TaskHandle_t 					RGBTaskHandle;
 // #define RGBTask_DERTH					100	
@@ -65,20 +62,13 @@ extern  SemaphoreHandle_t				PowerOnSemaphore_Handle;
 
 /* -----------------EventGroup(32bit)----------------- */
 extern EventGroupHandle_t 				MachineStateEvent_Handle;
-#define Machine_Off_Event				(0x01<<0)
-#define Machine_On_Event				(0x01<<1)
+#define Machine_On_Event				(0x01<<0)
+#define MachineOn_PID_Event			    (0x01<<1)
 #define CalibrateStart_Event			(0x01<<2)
-#define CalibrateStop_Event			    (0x01<<3)
-#define CalibrateStartBlower_Event		(0x01<<4)
-#define CalibrateStopBlower_Event		(0x01<<5)
-#define CaculateFlowEnd_Event			(0x01<<6)
-#define BlueTooth_Off_Event			    (0x01<<7)
-#define BlueTooth_On_Event			    (0x01<<8)
-#define AlarmState_Off_Event			(0x01<<9)
-#define AlarmState_On_Event			    (0x01<<10)
-#define TestMask_Start_Event			(0x01<<11)
-#define TestMask_Stop_Event			    (0x01<<12)
-#define MachineOn_PID_Event			    (0x01<<13)
+#define CalibrateStartBlower_Event		(0x01<<3)
+#define BlueTooth_On_Event			    (0x01<<4)
+#define AlarmState_On_Event			    (0x01<<5)
+#define TestMask_Start_Event			(0x01<<6)
 
 extern EventGroupHandle_t 				FeedDogEvent_Handle;
 

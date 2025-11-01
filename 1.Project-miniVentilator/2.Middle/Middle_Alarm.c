@@ -1,7 +1,7 @@
 #include "Middle_Alarm.h"
 
 /* The highest priority alarm. */
-void Mid_HighPriority_Alarm(void);
+// void Mid_HighPriority_Alarm(void);
 
 /*!
 	@brief 		 Machine alarm.
@@ -25,7 +25,7 @@ void Mid_MachineAlarm(void *pvParameter){
 
 		/* -------------------------- ALARM VOICE ------------------------------ */
 		if(Machine_State.Alarm_State.flag_highpri == SET){
-			Mid_HighPriority_Alarm();
+			// Mid_HighPriority_Alarm();
 		}
 		else if(Machine_State.Alarm_State.flag_middlepri == SET){
 			Mid_Voice_Alarm(middle_pri);
@@ -106,51 +106,51 @@ void Mid_TestLowPriority(){
 	@param[out]	 none
 	@retval		 none
 */
-void Mid_HighPriority_Alarm(){
-	FlagStatus flag_set_rgb = SET;
-	uint16_t time_count = 0;
-	uint8_t count = 0;
-	/* Power off alarm. */
-	if(Machine_State.Alarm_State.flag_poweroff == SET){
-		/* Turn off the machine. */
-		xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
-		Machine_State.flag_machine_onoff = RESET;
-		Mid_SendToBlower(SEND_RPM,0);
-		/* Suspened other tasks. */
-//		vTaskSuspend(MachineRunTaskHandle);
-//		vTaskSuspend(TestMaskTaskHandle);
-//		vTaskSuspend(FlowTaskHandle);
-		while(1){
-			/* Check power. */
-			if(Mid_TestPower() == SET){
-				if(count++ >= 5){
-					//Reset chip.
-				}
-			}
-			/* Sound-light alarm. */
-			Mid_Voice_Alarm(high_pri);
-			Mid_RGB_Flash(R_Light,2,50,flag_set_rgb);
-			flag_set_rgb = RESET;
-			vTaskDelay(pdMS_TO_TICKS(50));
-			if(time_count++ >= 30000/50){	//30s
-				time_count = 0;
-				count = 0;
-				while(1){
-					/* Close voice and light. */
-					if(RESET == Dri_Get_VoiceBusy()) 
-						Mid_RGB_Close();
-					/* Check power. */
-					if(Mid_TestPower() == SET){
-						if(count++ >= 5){
-							//Reset chip.
-						}
-					}
-				}
-			}
-		}
-	}
+// void Mid_HighPriority_Alarm(){
+// 	FlagStatus flag_set_rgb = SET;
+// 	uint16_t time_count = 0;
+// 	uint8_t count = 0;
+// 	/* Power off alarm. */
+// 	if(Machine_State.Alarm_State.flag_poweroff == SET){
+// 		/* Turn off the machine. */
+// 		xEventGroupSetBits(MachineStateEvent_Handle,Machine_Off_Event);
+// 		Machine_State.flag_machine_onoff = RESET;
+// 		Mid_SendToBlower(SEND_RPM,0);
+// 		/* Suspened other tasks. */
+// //		vTaskSuspend(MachineRunTaskHandle);
+// //		vTaskSuspend(TestMaskTaskHandle);
+// //		vTaskSuspend(FlowTaskHandle);
+// 		while(1){
+// 			/* Check power. */
+// 			if(Mid_TestPower() == SET){
+// 				if(count++ >= 5){
+// 					//Reset chip.
+// 				}
+// 			}
+// 			/* Sound-light alarm. */
+// 			Mid_Voice_Alarm(high_pri);
+// 			Mid_RGB_Flash(R_Light,2,50,flag_set_rgb);
+// 			flag_set_rgb = RESET;
+// 			vTaskDelay(pdMS_TO_TICKS(50));
+// 			if(time_count++ >= 30000/50){	//30s
+// 				time_count = 0;
+// 				count = 0;
+// 				while(1){
+// 					/* Close voice and light. */
+// 					if(RESET == Dri_Get_VoiceBusy()) 
+// 						Mid_RGB_Close();
+// 					/* Check power. */
+// 					if(Mid_TestPower() == SET){
+// 						if(count++ >= 5){
+// 							//Reset chip.
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
 
-}
+// }
 
 /*!
 	@brief 		 Calculate the usage time of consumables whether over the setting time of consumables.

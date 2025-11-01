@@ -133,7 +133,7 @@ ErrorStatus Mid_SDP31Data_Process(int *pdiffdata){
 	@param[out]	 none
 	@retval		 none
 */
-int Mid_CalculateFlow(int now_flow){
+void Mid_CalculateFlow(int *pflow){
 	uint32_t diff_p = 0;
 	int measure_flow = 0;
 
@@ -167,11 +167,8 @@ int Mid_CalculateFlow(int now_flow){
 
 		if(Run_Param.diff_press < 0 &&  measure_flow > 0)
 			measure_flow = -measure_flow;
+		*pflow = measure_flow;
 	}
-	else
-		measure_flow = now_flow;
-		
-	return measure_flow;
 }
 
 // int Mid_CalculateFlow(int now_flow){

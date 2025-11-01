@@ -15,16 +15,11 @@ void App_Calibration_Task(void *pvParameter){
 	FlagStatus flag_calibrate_start = RESET;
 	EventBits_t calibrate_event = 0x0;
 	Calibration_t calibration_rec;
-	Run_Param_t run_param;
-	Blower_State_t blower_state;
+	Run_Param_t run_param = {0};
+	Blower_State_t blower_state = {0};
 	CalibrationData.calflow_count = 1;
 	while(1){
 		calibrate_event = xEventGroupWaitBits(MachineStateEvent_Handle,CalibrateStart_Event,pdFALSE,pdFALSE,0);
-		/* ERROR! */
-		if((calibrate_event&CalibrateStart_Event) == CalibrateStart_Event && (calibrate_event&CalibrateStop_Event) == CalibrateStop_Event){
-			xEventGroupClearBits(MachineStateEvent_Handle,CalibrateStart_Event);
-			calibrate_event = CalibrateStop_Event;
-		}
 
 		/* Start calibration. */
 		if((calibrate_event&CalibrateStart_Event) == CalibrateStart_Event){
@@ -49,7 +44,6 @@ void App_Calibration_Task(void *pvParameter){
 					Blower_State.set_rpm = cali_set_rpm;
 					xQueueOverwrite(BlowerStateQueue_Handle,&Blower_State);
 					xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStartBlower_Event);
-					xEventGroupClearBits(MachineStateEvent_Handle,CalibrateStopBlower_Event);
 				}
 				else if(calibration_rec.flag_rerpm == SET && calibration_rec.flag_uprpm == RESET && calibration_rec.flag_stopblower == RESET){
 					cali_set_rpm = cali_set_rpm <= MOTOR_SPEED_MIN ? MOTOR_SPEED_MIN : cali_set_rpm-calibration_rec.rerpm_interval;
@@ -60,7 +54,6 @@ void App_Calibration_Task(void *pvParameter){
 					cali_set_rpm = MOTOR_SPEED_MIN;
 					Blower_State.set_rpm = 0;
 					xQueueOverwrite(BlowerStateQueue_Handle,&Blower_State);
-					xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStopBlower_Event);
 					xEventGroupClearBits(MachineStateEvent_Handle,CalibrateStartBlower_Event);
 				}
 				/* Real-time clock. */
@@ -75,14 +68,14 @@ void App_Calibration_Task(void *pvParameter){
 			}
 		}
 		/* Stop calibration. */
-		if(((calibrate_event&CalibrateStop_Event) == CalibrateStop_Event) && (flag_calibrate_start == SET)){
+		if(((calibrate_event&CalibrateStart_Event) != CalibrateStart_Event) && (flag_calibrate_start == SET)){
 			cali_set_rpm = MOTOR_SPEED_MIN;
 			if(Mid_WriteCALData(&CalibrationData) == SUCCESS){
 				flag_calibrate_start = RESET;
 			}
 		}
 		/* Suspend task. */
-		if(((calibrate_event&CalibrateStop_Event) == CalibrateStop_Event) && (flag_calibrate_start == RESET)){
+		if(((calibrate_event&CalibrateStart_Event) != CalibrateStart_Event) && (flag_calibrate_start == RESET)){
 			if(count++ >= 10){
 				count = 0;
 				xEventGroupWaitBits(MachineStateEvent_Handle,CalibrateStart_Event,pdFALSE,pdFALSE,portMAX_DELAY);
@@ -167,6 +160,7 @@ void Mid_CALCoefficient(){
 	@param[out]	 none
 	@retval		 none
 */
+char flag_mask = 0;
 int flag_flow = 0;
 int flag_press = 0;
 int flag_stopblo = 0;
@@ -185,6 +179,10 @@ void App_Cali_Debug_Function(void *pvParameter){
 	calibration_send.flag_recordmodel = RESET;
 	calibration_send.flag_recordrtc = RESET;
 	while(1){
+		if(flag_mask == 1)
+			xEventGroupSetBits(MachineStateEvent_Handle,TestMask_Start_Event);
+		else if(flag_mask == 2)
+			xEventGroupClearBits(MachineStateEvent_Handle,TestMask_Start_Event);
 		if(flag_flow == 1){
 			calibration_send.flag_califlow = SET;
 			calibration_send.flag_calipress = RESET;
@@ -194,12 +192,10 @@ void App_Cali_Debug_Function(void *pvParameter){
 			calibration_send.flag_califlow = RESET;
 		}
 		if(flag_startcali == 1){
-			xEventGroupClearBits(MachineStateEvent_Handle,CalibrateStop_Event);
 			xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStart_Event);
 		}
 		if(flag_stopcali == 1){
 			xEventGroupClearBits(MachineStateEvent_Handle,CalibrateStart_Event);
-			xEventGroupSetBits(MachineStateEvent_Handle,CalibrateStop_Event);
 		}
 		if(flag_stopblo == 1){
 			calibration_send.flag_stopblower = SET;
@@ -227,6 +223,7 @@ void App_Cali_Debug_Function(void *pvParameter){
 			calibration_send.rtc_time[7] = 0;
 			calibration_send.flag_recordrtc = SET;
 		}
+		flag_mask = 0;
 		flag_flow = 0;
 		flag_press = 0;
 		flag_startcali = 0;

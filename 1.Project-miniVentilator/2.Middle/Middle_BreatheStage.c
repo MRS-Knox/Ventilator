@@ -92,6 +92,11 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage){
 	}
 	else
 		ex_count2 = 0;
+	
+	/* Update the breathe count. */
+	if(*pstage == Ex_Start && last_stage == Ins_End)
+		Run_Param.breathe_count = Run_Param.breathe_count>=10 ? 10 : Run_Param.breathe_count+1;
+	
 	/* Error! */
 	if(flag_node_ex == SET && mean < now_flow){
 		ex_count1 = 0;
@@ -106,7 +111,7 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage){
 		*pstage = Error;
 	}
 	if(*pstage == last_stage){
-		if(err_count++ >= (10000/20)){	//10s
+		if(err_count++ >= (4000/20)){	//4s
 			err_count = 0;
 			*pstage = Error;
 		}	

@@ -23,12 +23,11 @@ typedef enum{
 	Machine_Run,			//Machine normal running now.
 }eMachine_RunStage;
 
-
 typedef enum{
 	Test_Stop = 0,	
 	Test_Start,
 	Test_Run,
-}eTestMask_Step;
+}eTestMask_Stage;
 
 typedef enum{
 	/* Alarm. */

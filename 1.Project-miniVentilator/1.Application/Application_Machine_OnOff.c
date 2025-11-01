@@ -7,9 +7,6 @@
 	@retval		 none
 */
 unsigned char machine_onoff_time = 0;
-//int flow_buff1[3000];
-//eBreathe_Stage stage1[3000];
-//uint16_t flow_buff1_count = 0;
 void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
@@ -20,22 +17,26 @@ void App_Machine_OnOff_Task(void *pvParameter){
 	while(1){
 		machine_onoff_time = machine_onoff_time>200 ? 0 : machine_onoff_time+1;
 		machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_On_Event,pdFALSE,pdFALSE,0);
-		/* ERROR!!! */
-		if((machine_event&Machine_On_Event) == Machine_On_Event && (machine_event&Machine_Off_Event) == Machine_Off_Event){
-			xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
-			Machine_State.flag_machine_onoff = RESET;
-			machine_event &= (~Machine_On_Event); 
+		/* On/Off key. */
+		if(Machine_State.flag_machine_switch == 2){
+			Machine_State.flag_machine_switch = 0;
+			if((machine_event&Machine_On_Event) == Machine_On_Event)
+				xEventGroupClearBits(MachineStateEvent_Handle,Machine_On_Event);
+			else
+				xEventGroupSetBits(MachineStateEvent_Handle,Machine_On_Event);
+			machine_event = xEventGroupWaitBits(MachineStateEvent_Handle,Machine_On_Event,pdFALSE,pdFALSE,0);
 		}
 
-		Run_Param.flow_data = Mid_CalculateFlow(Run_Param.flow_data);
+		Mid_CalculateFlow(&Run_Param.flow_data);
 		
-		if(run_stage != Machine_Stop){
-			if((machine_event&Machine_Off_Event) == Machine_Off_Event)
-				run_stage = Machine_Stop;
+		if(run_stage != Machine_Stop && (machine_event&Machine_On_Event) != Machine_On_Event){
+			run_stage = Machine_Stop;
+			Machine_State.flag_machine_onoff = RESET;
 		}
-		else if(run_stage == Machine_Stop){
-			if((machine_event&Machine_On_Event) == Machine_On_Event)
-				run_stage = Machine_Start;
+		else if(run_stage == Machine_Stop && (machine_event&Machine_On_Event) == Machine_On_Event){
+			Machine_State.flag_machine_onoff = SET;
+			run_stage = Machine_Start;
+			xEventGroupClearBits(MachineStateEvent_Handle,TestMask_Start_Event|CalibrateStartBlower_Event);
 		}
 		
 		switch(run_stage){
@@ -99,7 +100,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 				Run_Param.flow_mean = Run_Param.flow_sum / MAXFLOWBUFF_COUNT;
 				MoveRight_Range(flow_buff,MAXFLOWBUFF_COUNT,Run_Param.flow_data);
 				Mid_Judge_BreatheStage(flow_buff,Run_Param.flow_mean,&Run_Param.breathe_stage);
-				Mid_EPR(&Run_Param.now_run_p,Run_Param.now_set_p,Run_Param.breathe_stage);
+				Mid_EPR(&Run_Param.now_run_p,Run_Param.now_set_p,Run_Param.breathe_stage,Run_Param.breathe_count,SET);
 			}
 		}
 		else{
@@ -107,13 +108,9 @@ void App_Machine_OnOff_Task(void *pvParameter){
 			flag_machine_start = SET;
 		}		
 		Mid_AutoOn_AutoOff(Run_Param.flow_data,machine_event);
-		
-//		stage1[flow_buff1_count] = Run_Param.breathe_stage;
-//		flow_buff1[flow_buff1_count++] = Run_Param.flow_data;
-//		if(flow_buff1_count >= 3000)
-//			flow_buff1_count = 0;
-		
-		xQueueOverwrite(RunParamQueue_Handle,&Run_Param);
+
+		if((machine_event&TestMask_Start_Event) != TestMask_Start_Event)	
+			xQueueOverwrite(RunParamQueue_Handle,&Run_Param);
 		vTaskDelay(pdMS_TO_TICKS(20));
 	}
 }
@@ -125,14 +122,11 @@ void App_Machine_OnOff_Task(void *pvParameter){
 	@retval		 none
 */
 void App_MachineOn_SetParam(void){
-	/* Delete!!! */
-	Set_Param.mode = CPAP;
-	Set_Param.delaypress_min = 0;
-	Set_Param.start_press    = 400;
-	Set_Param.therapy_press  = 400;
-	Set_Param.epr = 0;
+	/* Clear parameter again. */
+	Run_Param.flow_sum 			= 0;
+	Run_Param.breathe_count		= 0;
 
-	/*--------------------------------------------*/
+	/* Set pressure. */
 	Run_Param.now_run_p = Set_Param.start_press;
 	Run_Param.now_set_p = Set_Param.start_press;
 	if(Set_Param.mode == CPAP)
@@ -193,6 +187,7 @@ void App_MachineOff_ClearParam(void){
 	Run_Param.ins_ex_scale[0]	= 0;
 	Run_Param.ins_ex_scale[1]	= 0;
 	Run_Param.bpm				= 0;
+	Run_Param.breathe_count		= 0;
 }
 
 
