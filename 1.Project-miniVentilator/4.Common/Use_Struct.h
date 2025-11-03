@@ -30,7 +30,7 @@ typedef struct{
 typedef struct{	
 	int diff_press;
 	int flow_data;  					//1lpm * 100	
-	long int flow_sum;
+	int flow_sum;
 	int flow_mean;
 	int max_flow;
 	int min_flow;
@@ -40,6 +40,7 @@ typedef struct{
 	unsigned short now_run_p;
 	unsigned short delay_end_p;
 	unsigned short testmask_set_p;
+	int mask_leak;
 
 	unsigned char  delayp_time; 		//The unit is minute.
 	unsigned char  delayp_remaintime;	//Remaining time for delay increase pressure.

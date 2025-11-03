@@ -16,11 +16,11 @@ extern  TaskHandle_t 					CONBlowerTaskHandle;
 #define CONBlowerTask_Priority		    Max_SoftwarePriority
 
 extern  TaskHandle_t 					MachineOnOffTaskHandle;
-#define MachineOnOffTask_DERTH			1000	
+#define MachineOnOffTask_DERTH			500	
 #define MachineOnOffTask_Priority		6
 
 extern  TaskHandle_t 					TestMaskTaskHandle;
-#define TestMaskTask_DERTH			    500	
+#define TestMaskTask_DERTH			    1000	
 #define TestMaskTask_Priority			5
 
 

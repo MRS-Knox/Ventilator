@@ -11,6 +11,7 @@ void App_Machine_OnOff_Task(void *pvParameter){
 	FlagStatus flag_clearparam = SET;
 	FlagStatus flag_machine_start = RESET;
 	int flow_buff[MAXFLOWBUFF_COUNT];
+	int stdflow_buff[10];
 	uint16_t flow_buff_count = 0;
 	EventBits_t machine_event = 0x00;
 	eMachine_RunStage run_stage = Machine_Stop; 
@@ -44,8 +45,10 @@ void App_Machine_OnOff_Task(void *pvParameter){
 				if(flag_clearparam == SET){
 					flag_clearparam = RESET;
 					App_MachineOff_ClearParam();
-					for(uint16_t i = 0;i < MAXFLOWBUFF_COUNT;i++)
-						flow_buff[i] = 0;
+					// for(uint16_t i = 0;i < MAXFLOWBUFF_COUNT;i++)
+					// 	flow_buff[i] = 0;
+					flow_buff_count = 0;
+					flag_machine_start = SET;
 				}
 				break;
 			case Machine_Start:
@@ -90,23 +93,25 @@ void App_Machine_OnOff_Task(void *pvParameter){
 				flow_buff[flow_buff_count++] = Run_Param.flow_data;
 				Run_Param.flow_sum += Run_Param.flow_data;
 				if(flow_buff_count >= MAXFLOWBUFF_COUNT){
-					flow_buff_count = 0;
 					flag_machine_start = RESET;
+					for(uint8_t i = 0;i < 10;i++)
+						stdflow_buff[i] = flow_buff[MAXFLOWBUFF_COUNT-10+i];
 				}
 			}
 			/* Machine is running. */
 			else{
-				Run_Param.flow_sum = (Run_Param.flow_sum-flow_buff[0])+Run_Param.flow_data;
+				Run_Param.flow_sum = (Run_Param.flow_sum-flow_buff[flow_buff_count-MAXFLOWBUFF_COUNT])+Run_Param.flow_data;
 				Run_Param.flow_mean = Run_Param.flow_sum / MAXFLOWBUFF_COUNT;
-				MoveRight_Range(flow_buff,MAXFLOWBUFF_COUNT,Run_Param.flow_data);
-				Mid_Judge_BreatheStage(flow_buff,Run_Param.flow_mean,&Run_Param.breathe_stage);
+				MoveRight_Range(stdflow_buff,10,Run_Param.flow_data);
+				/* Rotate right. */
+				flow_buff[flow_buff_count-MAXFLOWBUFF_COUNT] = Run_Param.flow_data;
+				if((++flow_buff_count) >= (2*MAXFLOWBUFF_COUNT))
+					flow_buff_count = MAXFLOWBUFF_COUNT;
+				Mid_Judge_BreatheStage(stdflow_buff,Run_Param.flow_mean,&Run_Param.breathe_stage);
 				Mid_EPR(&Run_Param.now_run_p,Run_Param.now_set_p,Run_Param.breathe_stage,Run_Param.breathe_count,SET);
 			}
 		}
-		else{
-			flow_buff_count = 0;
-			flag_machine_start = SET;
-		}		
+	
 		Mid_AutoOn_AutoOff(Run_Param.flow_data,machine_event);
 
 		if((machine_event&TestMask_Start_Event) != TestMask_Start_Event)	

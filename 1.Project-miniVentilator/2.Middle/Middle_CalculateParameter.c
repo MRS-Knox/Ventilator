@@ -9,9 +9,9 @@
 */
 void Mid_Update_MonitorPARAM(eBreathe_Stage now_stage){
 	static eBreathe_Stage last_stage = None;
-	static long int leak_sum = 0;
-	static long int ins_vt_sum = 0;
-	static long int ex_vt_sum = 0;
+	static int leak_sum = 0;
+	static int ins_vt_sum = 0;
+	static int ex_vt_sum = 0;
 	float f_data = 0.0f;
 	uint8_t base_time = 10;	//10ms
 	static int last_leak_mean = 0;
@@ -91,10 +91,9 @@ void Mid_Update_MonitorPARAM(eBreathe_Stage now_stage){
 	}
 	Run_Param.ins_time = Run_Param.ins_time>=30000 ? 30000 : Run_Param.ins_time;
 	Run_Param.ex_time = Run_Param.ex_time>=30000 ? 30000 : Run_Param.ex_time;
-	leak_sum = leak_sum>=300000 ? 300000 : leak_sum;
-	ins_vt_sum = ins_vt_sum>=300000 ? 300000 : ins_vt_sum;
-	ex_vt_sum = ex_vt_sum>=300000 ? 300000 : ex_vt_sum;
-	last_stage = now_stage;
+	leak_sum = leak_sum>=30000000 ? 30000000 : leak_sum;
+	ins_vt_sum = ins_vt_sum>=30000000 ? 30000000 : ins_vt_sum;
+	ex_vt_sum = ex_vt_sum>=30000000 ? 30000000 : ex_vt_sum;
 	if(last_leak_mean == Run_Param.leak_mean){
 		if(leak_count++ > 6000/base_time){	//6s
 			leak_count = 0;
@@ -103,7 +102,7 @@ void Mid_Update_MonitorPARAM(eBreathe_Stage now_stage){
 	}
 	else
 		leak_count = 0;
-	
+	last_stage = now_stage;
 	last_leak_mean = Run_Param.leak_mean;
 }
 

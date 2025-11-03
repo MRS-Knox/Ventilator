@@ -82,7 +82,7 @@ void Mid_SDP31_ReadData(uint16_t *scale_factor,uint8_t *sdp31_value){
 	FLOW_No_Ack();	
 	FLOW_Stop();
 	
-	if(sdp31_value[5] == Check_SensorCRC8(&sdp31_value[3],2))	//Calculate CRC and judge CRC whether right.
+//	if(sdp31_value[5] == Check_SensorCRC8(&sdp31_value[3],2))	//Calculate CRC and judge CRC whether right.
 		*scale_factor = (sdp31_value[3]<<8) + sdp31_value[4];	
 }
 
@@ -170,43 +170,6 @@ void Mid_CalculateFlow(int *pflow){
 		*pflow = measure_flow;
 	}
 }
-
-// int Mid_CalculateFlow(int now_flow){
-// 	uint32_t diff_p = 0;
-// 	int measure_flow = 0;
-
-// 	if(Mid_SDP31Data_Process(&Run_Param.diff_press) == SUCCESS){
-// 		if(Run_Param.diff_press < 0.0f)
-// 			diff_p = -Run_Param.diff_press;
-// 		else
-// 			diff_p = Run_Param.diff_press;
-
-// 		/* [0,40) */
-// 		if(diff_p <= CalibrationData.calflow_buff[1])
-// 			measure_flow = (int)(((float)CalibrationData.k[0]/100.0f) * sqrt(diff_p));
-// 		/* [40,60) */
-// 		else if(diff_p <= CalibrationData.calflow_buff[2])
-// 			measure_flow = (int)(((float)CalibrationData.k[1]/100.0f) * sqrt(diff_p));
-// 		/* [60,80) */
-// 		else if(diff_p <= CalibrationData.calflow_buff[3])
-// 			measure_flow = (int)(((float)CalibrationData.k[2]/100.0f) * sqrt(diff_p));
-// 		/* [80,100) */
-// 		else if(diff_p <= CalibrationData.calflow_buff[4])
-// 			measure_flow = (int)(((float)CalibrationData.k[3]/100.0f) * sqrt(diff_p));
-// 		/* [100,120) */
-// 		else if(diff_p <= CalibrationData.calflow_buff[5])
-// 			measure_flow = (int)(((float)CalibrationData.k[4]/100.0f) * sqrt(diff_p));
-// 		/* >=120 */
-// 		else if(diff_p > CalibrationData.calflow_buff[5])
-// 			measure_flow = (int)(((float)CalibrationData.k[5]/100.0f) * sqrt(diff_p));
-
-// 		if(Run_Param.diff_press < 0 &&  measure_flow > 0)
-// 			measure_flow = -measure_flow;
-// 	}
-// 	else
-// 		measure_flow = now_flow;
-// 	return measure_flow;
-// }
 
 
 

@@ -89,9 +89,9 @@ void FLOW_Ack(){
 	
 	FLOW_SCL_Low;
 	FLOW_SDA_Low;
-	udelay_1us(2);
+	udelay_1us(1);
 	FLOW_SCL_High;
-	udelay_1us(2);
+	udelay_1us(1);
 	FLOW_SCL_Low;
 }
 
@@ -120,7 +120,7 @@ void FLOW_Wait_Ack(){
 			break;
 		}
 	}
-	udelay_1us(1);
+//	udelay_1us(1);
 	
 	FLOW_SCL_Low;
 	FLOW_SDA_OUT;
@@ -191,14 +191,14 @@ uint8_t FLOW_Read_Byte(){
 	FLOW_SCL_Low;	
 	for(count = 0;count < 8;count++){
 		FLOW_SCL_Low;
-		udelay_1us(2);
+		udelay_1us(1);
 		
 		FLOW_SCL_High;
 		data <<= 1;
 		if(GPIO_ReadInputDataBit(IIC2_SDA_Group,IIC2_SDA_Pin)){
 			data++;	
 		}
-		udelay_1us(2);
+		udelay_1us(1);
 	}
 	
 	FLOW_SCL_Low;

@@ -293,6 +293,8 @@ void MeasureStack(void *pvParameter){
 	while(1){
 		depth[0] = uxTaskGetStackHighWaterMark(CONBlowerTaskHandle);
 		depth[1] = uxTaskGetStackHighWaterMark(MachineOnOffTaskHandle);
+		depth[2] = uxTaskGetStackHighWaterMark(TestMaskTaskHandle);
+		
 //		depth[2] = uxTaskGetStackHighWaterMark(RGBTaskHandle);
 //		depth[3] = uxTaskGetStackHighWaterMark(NULL);
 //		depth[4] = uxTaskGetStackHighWaterMark(MachineRunTaskHandle);

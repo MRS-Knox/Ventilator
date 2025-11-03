@@ -19,14 +19,31 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage){
 	static uint8_t ex_count1 = 0;
 	static uint8_t ex_count2 = 0;
 	static uint16_t err_count = 0;
-	int now_flow = pflow_buff[MAXFLOWBUFF_COUNT-1];
-	int last_flow = pflow_buff[MAXFLOWBUFF_COUNT-2];
-	Run_Param.std = Calculate_STD(&pflow_buff[MAXFLOWBUFF_COUNT-10],10);
+	
+	int now_flow = pflow_buff[9];
+	int last_flow = pflow_buff[8];
+	Run_Param.std = Calculate_STD(pflow_buff,10);
 	int k = now_flow - last_flow;
 	if(-20 < k && k < 20){	//Flow is stabilization.
 		ex_count1 = 0;
 		ins_count1 = 0;
-	}	
+	}
+	/* Error! */
+	if(flag_node_ex == SET && mean < now_flow){
+		ex_count1 = 0;
+		ex_count2 = 0;
+		flag_node_ex = RESET;
+		*pstage = Error;
+		return;
+	}
+	if(flag_node_ins == SET && mean > now_flow){
+		ins_count1 = 0;
+		ins_count2 = 0;
+		flag_node_ins = RESET;
+		*pstage = Error;
+		return;
+	}
+
 	/* Machine is just starting. */
 	if(*pstage == None){
 		flag_node_ins = RESET;
@@ -96,20 +113,7 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage){
 	/* Update the breathe count. */
 	if(*pstage == Ex_Start && last_stage == Ins_End)
 		Run_Param.breathe_count = Run_Param.breathe_count>=10 ? 10 : Run_Param.breathe_count+1;
-	
-	/* Error! */
-	if(flag_node_ex == SET && mean < now_flow){
-		ex_count1 = 0;
-		ex_count2 = 0;
-		flag_node_ex = RESET;
-		*pstage = Error;
-	}
-	if(flag_node_ins == SET && mean > now_flow){
-		ins_count1 = 0;
-		ins_count2 = 0;
-		flag_node_ins = RESET;
-		*pstage = Error;
-	}
+
 	if(*pstage == last_stage){
 		if(err_count++ >= (4000/20)){	//4s
 			err_count = 0;
@@ -117,8 +121,7 @@ void Mid_Judge_BreatheStage(int *pflow_buff,int mean,eBreathe_Stage *pstage){
 		}	
 	}
 	else
-		err_count = 0;
-
+		err_count = 0;		
 	last_stage = *pstage;
 	last_mean = mean;
 }
